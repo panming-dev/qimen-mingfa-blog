@@ -4,18 +4,16 @@ on:
     branches: [master]
   workflow_dispatch: {}
 
-permissions:
-  contents: write  # 需要写入 gh-pages 分支
-  pages: write
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: true
           fetch-depth: 0
 
       - name: Setup Hugo
@@ -27,22 +25,12 @@ jobs:
       - name: Build
         run: hugo --minify
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./public
-
       - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/master'
         run: |
+          cd public
+          git init
+          git add -A
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          
-          # 下载 artifact 并部署
-          mkdir -p deploy_dir
-          cd deploy_dir
-          # 这里需要手动部署逻辑
-          echo "Deploy step"
+          git commit -m "Deploy Hugo site"
+          git push --force "https://${{ github.token }}@github.com/${{ github.repository }}.git" master:gh-pages
