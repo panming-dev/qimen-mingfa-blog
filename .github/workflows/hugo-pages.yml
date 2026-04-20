@@ -33,4 +33,4 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           git commit -m "Deploy Hugo site"
-          git push --force "https://${{ github.token }}@github.com/${{ github.repository }}.git" master:gh-pages
+          git push --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" master:gh-pages
