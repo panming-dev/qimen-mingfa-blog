@@ -18,7 +18,7 @@ jobs:
       - name: Setup Hugo
         uses: actions/setup-hugo@v3
         with:
-          hugo-version: 'extended_latest'
+          hugo-version: 'extended'
           extended: true
       - name: Build
         run: hugo --minify
