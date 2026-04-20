@@ -1,0 +1,28 @@
+# 临时文件
+tmp/
+*.bak
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 编辑器
+.vscode/
+.idea/
+
+# 日志
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# 书籍源文件（不在仓库中）
+*.md.orig
+book-pipeline/tmp/
+
+# 生成报告（可选择性提交）
+*.report.json
