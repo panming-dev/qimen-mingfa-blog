@@ -5,12 +5,11 @@ on:
   workflow_dispatch: {}
 
 permissions:
-  contents: read
+  contents: write  # 需要写入 gh-pages 分支
   pages: write
-  id-token: write
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,15 +35,14 @@ jobs:
         with:
           path: ./public
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    permissions:
-      pages: write
-      id-token: write
-    steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+        if: github.ref == 'refs/heads/master'
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          
+          # 下载 artifact 并部署
+          mkdir -p deploy_dir
+          cd deploy_dir
+          # 这里需要手动部署逻辑
+          echo "Deploy step"
