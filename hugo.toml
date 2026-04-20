@@ -1,0 +1,51 @@
+baseURL = 'https://panming-dev.github.io/'
+languageCode = 'zh-cn'
+title = '奇门鸣法'
+theme = 'PaperMod'
+
+[params]
+  defaultTheme = 'auto'
+  disableThemeToggle = false
+  ShowReadingTime = true
+  ShowBreadCrumbs = true
+  ShowPostNavLinks = true
+  ShowCodeCopyButtons = true
+  comments = false
+  hidemeta = false
+  hideSummary = false
+
+  [params.profileMode]
+    enabled = true
+    title = '奇门鸣法'
+    subtitle = '传统奇门遁甲经典解读'
+
+  [[params.socialIcons]]
+    name = 'github'
+    url = 'https://github.com/panming-dev/qimen-mingfa-blog'
+
+  [params.label]
+    icon = '/images/icon.png'
+
+[[menu.main]]
+  identifier = 'home'
+  name = '首页'
+  url = '/'
+  weight = 1
+
+[[menu.main]]
+  identifier = 'posts'
+  name = '文章'
+  url = '/posts/'
+  weight = 2
+
+[[menu.main]]
+  identifier = 'categories'
+  name = '系列'
+  url = '/categories/'
+  weight = 3
+
+[[menu.main]]
+  identifier = 'tags'
+  name = '标签'
+  url = '/tags/'
+  weight = 4
