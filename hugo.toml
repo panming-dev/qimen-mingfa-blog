@@ -55,10 +55,8 @@ theme = 'PaperMod'
   name = "标签"
   url = "/tags/"
   weight = 4
-[robots]
-  UserAgent = '*'
-  Disallow = '/admin/'
-  Disallow = '/private/'
-  CrawlDelay = 1
 
-paginate = 10
+[robots]
+  UserAgent = "*"
+  Disallow = ["/admin/", "/private/"]
+  CrawlDelay = 1
