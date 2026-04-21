@@ -1,4 +1,4 @@
-baseURL = 'https://panming-dev.github.io/qimen-mingfa-blog/'
+baseURL = 'https://panma.site/'
 languageCode = 'zh-cn'
 title = '奇门鸣法'
 theme = 'PaperMod'
