@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://panming-dev.github.io/qimen-mingfa-blog/sitemap.xml

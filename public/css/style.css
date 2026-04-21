@@ -1,0 +1,10 @@
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
+header { border-bottom: 1px solid #ddd; margin-bottom: 30px; padding-bottom: 10px; }
+header h1 { margin: 0; }
+nav a { margin-right: 15px; text-decoration: none; color: #0066cc; }
+nav a:hover { text-decoration: underline; }
+.post-entry { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+.post-entry h2 { margin: 0 0 10px 0; }
+.post-entry h2 a { text-decoration: none; color: #333; }
+.post-entry h2 a:hover { color: #0066cc; }
+.content { color: #555; }
