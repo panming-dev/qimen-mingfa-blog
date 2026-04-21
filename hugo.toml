@@ -28,33 +28,12 @@ theme = 'PaperMod'
   [params.label]
     icon = '/images/icon.png'
 
-[sitemap]
-[permalinks]
-  posts = "/:slug/"
-  changefreq = 'weekly'
-  priority = 0.8
+[sitemap]  changefreq = 'weekly'
+  priority = '0.8'
   filename = 'sitemap.xml'
 
-[[menu.main]]
-  identifier = "home"
-  name = "首页"
-  url = "/"
-  weight = 1
-[[menu.main]]
-  identifier = "posts"
-  name = "文章"
-  url = "/posts/"
-  weight = 2
-[[menu.main]]
-  identifier = "categories"
-  name = "系列"
-  url = "/categories/"
-  weight = 3
-[[menu.main]]
-  identifier = "tags"
-  name = "标签"
-  url = "/tags/"
-  weight = 4
+[permalinks]
+  posts = "/"
 
 [robots]
   UserAgent = "*"
