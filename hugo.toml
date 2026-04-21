@@ -4,6 +4,8 @@ title = '奇门鸣法'
 theme = 'PaperMod'
 
 [params]
+  # SEO Settings
+  seo = true
   defaultTheme = 'auto'
   disableThemeToggle = false
   ShowReadingTime = true
@@ -49,3 +51,16 @@ theme = 'PaperMod'
   name = '标签'
   url = '/tags/'
   weight = 4
+
+[sitemap]
+  changefreq = 'weekly'
+  priority = 0.8
+  filename = 'sitemap.xml'
+
+[robots]
+  UserAgent = '*'
+  Disallow = '/admin/'
+  Disallow = '/private/'
+  CrawlDelay = 1
+
+paginate = 10
