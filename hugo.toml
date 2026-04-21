@@ -53,6 +53,8 @@ theme = 'PaperMod'
   weight = 4
 
 [sitemap]
+[permalinks]
+  posts = "/:slug/"
   changefreq = 'weekly'
   priority = 0.8
   filename = 'sitemap.xml'
