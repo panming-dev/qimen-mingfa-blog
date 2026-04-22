@@ -14,10 +14,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Setup Hugo
-        uses: actions/setup-hugo@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          hugo-version: 'extended'
+          node-version: '20'
+      - name: Install Hugo
+        run: npm install -g hugo-extended
       - name: Build
         run: hugo --minify
       - name: Setup Pages
