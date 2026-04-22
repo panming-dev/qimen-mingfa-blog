@@ -161,6 +161,8 @@ export async function syncPosts() {
         published_at: data.date || new Date().toISOString(),
         author: AUTHOR_ID,
         category: resolvedCategoryId,
+      console.log('📦 Payload:', JSON.stringify(payload, null, 2));
+
       };
 
       if (existing.data && existing.data.length > 0) {
