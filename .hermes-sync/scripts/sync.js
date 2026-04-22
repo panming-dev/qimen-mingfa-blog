@@ -181,7 +181,7 @@ export async function syncPosts() {
       };
 
       console.log("📝 Category object:", categoryObj);
-      console.log("📦 Payload:", JSON.stringify(payload, null, 2));
+      console.log(`📦 Payload: title="${payload.title}" slug="${payload.slug}" content_len=${payload.content.length} chars`);
 
       if (existing.data && existing.data.length > 0) {
         const postId = existing.data[0].id;
