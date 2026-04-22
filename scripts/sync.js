@@ -14,6 +14,88 @@ if (!DIRECTUS_URL || !DIRECTUS_TOKEN) {
 }
 
 /**
+ * Generate slug from Chinese title using pinyin
+ */
+function generateSlug(title, fallback = 'untitled') {
+  if (!title) return fallback;
+
+  try {
+    // Dynamic import to avoid requiring pinyin in GitHub Actions if not needed
+    const pinyin = require('pinyin');
+
+    // Remove chapter prefix: "第一章 xxx" → "xxx"
+    const cleanTitle = title.replace(/^第[零一二三四五六七八九十百]+[章节篇部]/u, '').trim();
+
+    const pinyinArray = pinyin(cleanTitle, {
+      style: pinyin.STYLE_NORMAL,
+      heteronym: false,
+    });
+
+    const slugPart = pinyinArray
+      .flat()
+      .join(' ')
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+
+    return slugPart || fallback;
+  } catch (err) {
+    console.warn('⚠️  pinyin not available, using ASCII fallback');
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9\u4e00-\u9fa5]/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '') || fallback;
+  }
+}
+
+/**
+ * Fetch JSON with error handling
+ */
+async function fetchJSON(url, options = {}) {
+  const resp = await fetch(url, {
+    ...options,
+    headers: {
+      'Authorization': `Bearer ${DIRECTUS_TOKEN}`,
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+
+  if (!resp.ok) {
+    const text = await resp.text();
+    throw new Error(`HTTP ${resp.status}: ${text}`);
+  }
+
+  return resp.json();
+}
+
+/**
+ * Main sync function
+ */
+export async function syncPosts() {
+  const postsDir = join(__dirname, '..', 'content', 'posts'); // Adjust path as needed
+  console.log(`📁 Scanning: ${postsDir}`);
+
+  if (!fs.existsSync(postsDir)) {
+    console.error('❌ Posts directory not found:', postsDir);
+    console.log('   Create a "content/posts" folder with your .md files');
+    process.exit(1);
+  }
+
+  const files = fs.readdirSync(postsDir).filter(f => f.endsWith('.md'));
+  console.log(`📝 Found ${files.length} markdown files`);
+
+  let created = 0;
+  let updated = 0;
+  let failed = 0;
+
+  for (const file of files) {
+    const filePath = join(postsDir, file);
+    const content = fs.readFileSync(filePath, 'utf-8');
+/**
  * Simple front matter parser (no gray-matter dependency)
  * Returns { data: {...}, content: "..." }
  */
@@ -21,4 +103,71 @@ function parseFrontMatter(text) {
   const match = text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
   if (!match) return { data: {}, content: text };
   const frontMatter = {};
-  for (const line of match?.[1].split('\n')) ...[truncated]
+  for (const line of match?.[1]?.split('\n') || []) {
+    const eqIdx = line.indexOf('=');
+    if (eqIdx === -1) continue;
+    const key = line.slice(0, eqIdx).trim();
+    const value = line.slice(eqIdx + 1).trim();
+    // Try parse JSON-like values
+    if (value.startsWith('[') || value.startsWith('{')) {
+      try { frontMatter[key] = JSON.parse(value); continue; } catch(e) {}
+    }
+    frontMatter[key] = value;
+  }
+  return { data: frontMatter, content: match?.[2] || text };
+}
+
+    const { data, content: body } = parseFrontMatter(content);
+
+    const slug = data.slug || generateSlug(data.title, file.replace('.md', ''));
+
+    try {
+      // Check if post exists
+      const existing = await fetchJSON(
+        `${DIRECTUS_URL}/items/blog_posts?filter[slug][_eq]=${encodeURIComponent(slug)}&limit=1`
+      );
+
+      const payload = {
+        title: data.title || 'Untitled',
+        slug,
+        content: body,
+        excerpt: data.description || body.substring(0, 200),
+        seo_title: data.seo_title || data.title,
+        seo_description: data.description || '',
+        seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k: string) => k.trim()) : []),
+        status: data.status || 'published',
+        date: data.date || new Date().toISOString(),
+      };
+
+      if (existing.data && existing.data.length > 0) {
+        const postId = existing.data[0].id;
+        await fetchJSON(`${DIRECTUS_URL}/items/blog_posts/${postId}`, {
+          method: 'PATCH',
+          body: JSON.stringify(payload),
+        });
+        console.log(`✅ Updated: ${slug}`);
+        updated++;
+      } else {
+        const result = await fetchJSON(`${DIRECTUS_URL}/items/blog_posts`, {
+          method: 'POST',
+          body: JSON.stringify(payload),
+        });
+        console.log(`✅ Created: ${slug} (id: ${result.data.id})`);
+        created++;
+      }
+    } catch (err) {
+      console.error(`❌ Failed: ${slug} — ${err.message}`);
+      failed++;
+    }
+  }
+
+  console.log('\n📊 Sync complete:');
+  console.log(`   Created: ${created}`);
+  console.log(`   Updated: ${updated}`);
+  console.log(`   Failed:  ${failed}`);
+}
+
+syncPosts().catch(err => {
+  console.error('Fatal error:', err);
+  process.exit(1);
+});
