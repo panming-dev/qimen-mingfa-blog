@@ -160,10 +160,11 @@ export async function syncPosts() {
         status: data.status || 'published',
         published_at: data.date || new Date().toISOString(),
         author: AUTHOR_ID,
-        category: resolvedCategoryId,
-      console.log('📦 Payload:', JSON.stringify(payload, null, 2));
+        category: categoryObj,
 
       };
+      console.log("📝 Category object:", categoryObj);
+      console.log("📦 Payload:", JSON.stringify(payload, null, 2));
 
       if (existing.data && existing.data.length > 0) {
         const postId = existing.data[0].id;
