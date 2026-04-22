@@ -137,17 +137,9 @@ export async function syncPosts() {
       const existing = await fetchJSON(
         `${DIRECTUS_URL}/items/blog_posts?filter[slug][_eq]=${encodeURIComponent(slug)}&limit=1`
       );
-
-      // Resolve category ID
-      const resolvedCategoryId = CATEGORY_ID || (async () => {
-        const catResp = await fetchJSON(`${DIRECTUS_URL}/items/blog_categories?limit=1`);
-        return (catResp.data && catResp.data.length > 0) 
-          ? catResp.data[0].id 
-          : (await fetchJSON(`${DIRECTUS_URL}/items/blog_categories`, {
-              method: 'POST',
-              body: JSON.stringify({ name: '奇门遁甲', slug: 'qimen-dunjia' }),
-            })).data.id;
-      })();
+       
+      // 获取完整的 category 对象
+      const categoryObj = await ensureCategory();
 
       const payload = {
         title: data.title || 'Untitled',
@@ -161,8 +153,8 @@ export async function syncPosts() {
         published_at: data.date || new Date().toISOString(),
         author: AUTHOR_ID,
         category: categoryObj,
-
       };
+
       console.log("📝 Category object:", categoryObj);
       console.log("📦 Payload:", JSON.stringify(payload, null, 2));
 
@@ -177,6 +169,8 @@ export async function syncPosts() {
       } else {
         const result = await fetchJSON(`${DIRECTUS_URL}/items/blog_posts`, {
           method: 'POST',
+          body: JSON.stringify(payload),
+        });
           body: JSON.stringify(payload),
         });
         console.log(`✅ Created: ${slug} (id: ${result.data.id})`);
