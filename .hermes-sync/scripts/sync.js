@@ -150,13 +150,12 @@ export async function syncPosts() {
   let failed = 0;
 
   for (const file of files) {
-    const filePath = join(postsDir, file);
-    const content = fs.readFileSync(filePath, 'utf-8');
-    const { data, content: body } = matter(content);
-
-    const slug = data.slug || generateSlug(data.title, file.replace('.md', ''));
-
     try {
+      const filePath = join(postsDir, file);
+      const content = fs.readFileSync(filePath, 'utf-8');
+      const { data, content: body } = matter(content);
+
+      const slug = data.slug || generateSlug(data.title, file.replace('.md', ''));
       // Check if post exists
       const existing = await fetchJSON(
         `${DIRECTUS_URL}/items/blog_posts?filter[slug][_eq]=${encodeURIComponent(slug)}&limit=1`
