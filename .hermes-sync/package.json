@@ -1,0 +1,29 @@
+{
+  "name": "blog-migration-to-directus",
+  "version": "1.0.0",
+  "description": "Migration pipeline for blog content from Markdown to Directus CMS",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "parse": "node src/parser.js",
+    "normalize": "node src/normalizer.js",
+    "import": "node src/importer.js",
+    "verify": "node src/verify.js",
+    "test": "node test/test-parser.js"
+  },
+  "keywords": ["migration", "directus", "cms", "markdown"],
+  "author": "Hermes Agent",
+  "license": "MIT",
+  "dependencies": {
+    "@directus/sdk": "^11.0.0",
+    "gray-matter": "^4.0.3",
+    "pinyin": "^4.0.0",
+    "winston": "^3.11.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,27 @@
+name: Sync to Directus
+on:
+  push:
+    branches:
+      - main  # 推送到主分支时自动运行
+  workflow_dispatch: {}  # 允许手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Sync Posts to Directus
+        env:
+          DIRECTUS_URL: ${{ secrets.DIRECTUS_URL }}
+          DIRECTUS_TOKEN: ${{ secrets.DIRECTUS_TOKEN }}
+        run: node .hermes-sync/scripts/sync.js
