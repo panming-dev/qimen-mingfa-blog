@@ -97,7 +97,7 @@ async function fetchJSON(url, options = {}) {
  * Main sync function
  */
 export async function syncPosts() {
-  const postsDir = join(__dirname, '..', 'posts');
+  const postsDir = join(__dirname, '..', 'content', 'posts');
   console.log(`📁 Scanning: ${postsDir}`);
 
   if (!fs.existsSync(postsDir)) {
