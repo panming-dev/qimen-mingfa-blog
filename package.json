@@ -1,0 +1,17 @@
+{
+  "name": "qimen-mingfa-blog",
+  "version": "1.0.0",
+  "description": "\u5947\u95e8\u9041\u7532\u535a\u5ba2 - Directus \u81ea\u52a8\u540c\u6b65",
+  "main": "scripts/sync.js",
+  "type": "module",
+  "scripts": {
+    "sync": "node scripts/sync.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "pinyin": "^4.0.0",
+    "gray-matter": "^0.11.0"
+  }
+}
