@@ -1,4 +1,5 @@
 import fs from 'fs';
+import matter from 'gray-matter';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -81,7 +82,7 @@ export async function syncPosts() {
 
   if (!fs.existsSync(postsDir)) {
     console.error('❌ Posts directory not found:', postsDir);
-    console.log('   Create a "posts" folder with your .md files');
+    console.log('   Create a "content/posts" folder with your .md files');
     process.exit(1);
   }
 
@@ -95,29 +96,7 @@ export async function syncPosts() {
   for (const file of files) {
     const filePath = join(postsDir, file);
     const content = fs.readFileSync(filePath, 'utf-8');
-/**
- * Simple front matter parser (no gray-matter dependency)
- * Returns { data: {...}, content: "..." }
- */
-function parseFrontMatter(text) {
-  const match = text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-  if (!match) return { data: {}, content: text };
-  const frontMatter = {};
-  for (const line of match?.[1]?.split('\n') || []) {
-    const eqIdx = line.indexOf('=');
-    if (eqIdx === -1) continue;
-    const key = line.slice(0, eqIdx).trim();
-    const value = line.slice(eqIdx + 1).trim();
-    // Try parse JSON-like values
-    if (value.startsWith('[') || value.startsWith('{')) {
-      try { frontMatter[key] = JSON.parse(value); continue; } catch(e) {}
-    }
-    frontMatter[key] = value;
-  }
-  return { data: frontMatter, content: match?.[2] || text };
-}
-
-    const { data, content: body } = parseFrontMatter(content);
+    const { data, content: body } = matter(content);
 
     const slug = data.slug || generateSlug(data.title, file.replace('.md', ''));
 
@@ -134,7 +113,7 @@ function parseFrontMatter(text) {
         excerpt: data.description || body.substring(0, 200),
         seo_title: data.seo_title || data.title,
         seo_description: data.description || '',
-        seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k) => k.trim()) : []),
+        seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k: string) => k.trim()) : []),
         status: data.status || 'published',
         date: data.date || new Date().toISOString(),
       };
