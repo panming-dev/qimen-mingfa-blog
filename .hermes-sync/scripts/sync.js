@@ -176,8 +176,8 @@ export async function syncPosts() {
         status: data.status || 'published',
         published_at: data.date || new Date().toISOString(),
         // 获取作者对象（完整对象，确保外键有效）
-        authorObj: await getAuthor(),
-        // 注意：author 字段将使用对象 {id: X}，Directus 接受关联对象
+        author: await getAuthor(),
+        // Author object resolved from token or first user
         category: categoryObj,
       };
 
