@@ -171,8 +171,6 @@ export async function syncPosts() {
           method: 'POST',
           body: JSON.stringify(payload),
         });
-          body: JSON.stringify(payload),
-        });
         console.log(`✅ Created: ${slug} (id: ${result.data.id})`);
         created++;
       }
