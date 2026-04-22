@@ -201,6 +201,8 @@ export async function syncPosts() {
       }
     } catch (err) {
       console.error(`❌ Failed: ${slug} — ${err.message}`);
+      console.error(err.stack);
+      console.error("Payload causing issue:", JSON.stringify(payload, null, 2));
       failed++;
     }
   }
