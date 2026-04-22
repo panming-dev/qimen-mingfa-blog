@@ -134,7 +134,7 @@ export async function syncPosts() {
         read_more_url: `https://panma.site/posts/${slug}`,
         seo_title: data.seo_title || data.title,
         seo_description: data.description || '',
-        seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k: string) => k.trim()) : []),
+        seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k) => k.trim()) : []),
         status: data.status || 'published',
         date: data.date || new Date().toISOString(),
       };
