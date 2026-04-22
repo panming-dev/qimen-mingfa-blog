@@ -129,10 +129,9 @@ export async function syncPosts() {
       const payload = {
         title: data.title || 'Untitled',
         slug,
-        content: body,
+        content: generateExcerpt(body, 300),  // SEO模式：API仅返回摘要
         excerpt: generateExcerpt(body, 300),
-      content: generateExcerpt(body, 300),  // SEO模式：API仅返回摘要
-      read_more_url: `https://panma.site/posts/${slug}`,`
+        read_more_url: `https://panma.site/posts/${slug}`,
         seo_title: data.seo_title || data.title,
         seo_description: data.description || '',
         seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k: string) => k.trim()) : []),
