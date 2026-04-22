@@ -82,6 +82,30 @@ async function fetchJSON(url, options = {}) {
  * Main sync function
  */
 // Ensure category exists (query or create default)
+async function getAuthor() {
+  // 如果显式指定了 AUTHOR_ID，直接返回
+  if (process.env.AUTHOR_ID) {
+    console.log(`✅ Using explicit AUTHOR_ID: ${process.env.AUTHOR_ID}`);
+    return { id: process.env.AUTHOR_ID };
+  }
+
+  // 否则使用当前 token 对应的用户
+  try {
+    const me = await fetchJSON(`${DIRECTUS_URL}/users/me`);
+    console.log(`✅ Using current user: ${me.data.first_name} ${me.data.last_name} (${me.data.id})`);
+    return { id: me.data.id };
+  } catch (err) {
+    console.warn('⚠️  Could not get current user, querying first available user...');
+    // 查询第一个用户
+    const users = await fetchJSON(`${DIRECTUS_URL}/users?limit=1`);
+    if (users.data && users.data.length > 0) {
+      console.log(`✅ Using first user: ${users.data[0].id}`);
+      return { id: users.data[0].id };
+    }
+    throw new Error('No users found in Directus');
+  }
+}
+
 async function ensureCategory() {
   if (CATEGORY_ID) {
     console.log(`✅ Using category ID from CATEGORY_ID: ${CATEGORY_ID}`);
@@ -151,7 +175,9 @@ export async function syncPosts() {
         seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k) => k.trim()) : []),
         status: data.status || 'published',
         published_at: data.date || new Date().toISOString(),
-        author: AUTHOR_ID,
+        // 获取作者对象（完整对象，确保外键有效）
+        authorObj: await getAuthor(),
+        // 注意：author 字段将使用对象 {id: X}，Directus 接受关联对象
         category: categoryObj,
       };
 
