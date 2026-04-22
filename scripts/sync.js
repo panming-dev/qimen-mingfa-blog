@@ -81,7 +81,7 @@ export async function syncPosts() {
 
   if (!fs.existsSync(postsDir)) {
     console.error('❌ Posts directory not found:', postsDir);
-    console.log('   Create a "content/posts" folder with your .md files');
+    console.log('   Create a "posts" folder with your .md files');
     process.exit(1);
   }
 
