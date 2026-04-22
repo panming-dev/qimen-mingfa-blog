@@ -1,9 +1,8 @@
 name: Sync to Directus
 on:
   push:
-    branches:
-      - main  # 推送到主分支时自动运行
-  workflow_dispatch:  # 允许手动触发
+    branches: [master]
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -16,8 +15,19 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Debug - List files
+        run: |
+          pwd
+          ls -la
+          ls -la scripts/ 2>/dev/null || echo "No scripts dir"
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ${{ github.workspace }}
+
       - name: Sync Posts to Directus
         env:
           DIRECTUS_URL: ${{ secrets.DIRECTUS_URL }}
           DIRECTUS_TOKEN: ${{ secrets.DIRECTUS_TOKEN }}
         run: node scripts/sync.js
+        working-directory: ${{ github.workspace }}
