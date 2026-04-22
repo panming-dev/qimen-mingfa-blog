@@ -21,4 +21,4 @@ function parseFrontMatter(text) {
   const match = text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
   if (!match) return { data: {}, content: text };
   const frontMatter = {};
-  for (const line of match[1].split('\n')) ...[truncated]
+  for (const line of match?.[1].split('\n')) ...[truncated]
