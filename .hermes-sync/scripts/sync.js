@@ -2,17 +2,32 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { createRequire } from 'module';
 
-const require = createRequire(import.meta.url);
 
+// SEO 摘要生成：截取前300字，保持句子完整
+function generateExcerpt(content, maxLength = 300) {
+  const plainText = content.replace(/<[^>]+>/g, '').trim();
+  if (plainText.length <= maxLength) return plainText;
+  const sentences = plainText.split(/[。！？.!?]/);
+  let excerpt = '';
+  for (let sentence of sentences) {
+    const candidate = excerpt + sentence + '。';
+    if (candidate.length <= maxLength) {
+      excerpt = candidate;
+    } else {
+      break;
+    }
+  }
+  if (excerpt.length >= 100 && excerpt.length <= maxLength) {
+    return excerpt + '...';
+  }
+  return plainText.substring(0, maxLength) + '...';
+}
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const DIRECTUS_URL = process.env.DIRECTUS_URL?.replace(/\/$/, '');
 const DIRECTUS_TOKEN = process.env.DIRECTUS_TOKEN;
-const AUTHOR_ID = process.env.AUTHOR_ID;
-const CATEGORY_ID = process.env.CATEGORY_ID;
 
 if (!DIRECTUS_URL || !DIRECTUS_TOKEN) {
   console.error('❌ Missing DIRECTUS_URL or DIRECTUS_TOKEN environment variables');
@@ -81,59 +96,8 @@ async function fetchJSON(url, options = {}) {
 /**
  * Main sync function
  */
-// Ensure category exists (query or create default)
-async function getAuthor() {
-  // 如果显式指定了 AUTHOR_ID，直接返回
-  if (process.env.AUTHOR_ID) {
-    console.log(`✅ Using explicit AUTHOR_ID: ${process.env.AUTHOR_ID}`);
-    return { id: process.env.AUTHOR_ID };
-  }
-
-  // 否则使用当前 token 对应的用户
-  try {
-    const me = await fetchJSON(`${DIRECTUS_URL}/users/me`);
-    console.log(`✅ Using current user: ${me.data.first_name} ${me.data.last_name} (${me.data.id})`);
-    return { id: me.data.id };
-  } catch (err) {
-    console.warn('⚠️  Could not get current user, querying first available user...');
-    // 查询第一个用户
-    const users = await fetchJSON(`${DIRECTUS_URL}/users?limit=1`);
-    if (users.data && users.data.length > 0) {
-      console.log(`✅ Using first user: ${users.data[0].id}`);
-      return { id: users.data[0].id };
-    }
-    throw new Error('No users found in Directus');
-  }
-}
-
-async function ensureCategory() {
-  if (CATEGORY_ID) {
-    console.log(`✅ Using category ID from CATEGORY_ID: ${CATEGORY_ID}`);
-    return CATEGORY_ID;
-  }
-
-  console.log('🔍 Checking for existing category...');
-  try {
-    const resp = await fetchJSON(`${DIRECTUS_URL}/items/blog_categories?limit=1`);
-    if (resp.data && resp.data.length > 0) {
-      console.log(`✅ Found existing category: ${resp.data[0].name} (${resp.data[0].id})`);
-      return resp.data[0].id;
-    }
-  } catch (err) {
-    console.warn(`⚠️  Category query failed: ${err.message}`);
-  }
-
-  console.log('➕ Creating default category "奇门遁甲"...');
-  const createResp = await fetchJSON(`${DIRECTUS_URL}/items/blog_categories`, {
-    method: 'POST',
-    body: JSON.stringify({ name: '奇门遁甲', slug: 'qimen-dunjia' }),
-  });
-  console.log(`✅ Created category: ${createResp.data.id}`);
-  return createResp.data.id;
-}
-
 export async function syncPosts() {
-  const postsDir = join(__dirname, '..', 'content', 'posts'); // Adjust path as needed
+  const postsDir = join(__dirname, '..', 'posts');
   console.log(`📁 Scanning: ${postsDir}`);
 
   if (!fs.existsSync(postsDir)) {
@@ -150,38 +114,31 @@ export async function syncPosts() {
   let failed = 0;
 
   for (const file of files) {
-    try {
-      const filePath = join(postsDir, file);
-      const content = fs.readFileSync(filePath, 'utf-8');
-      const { data, content: body } = matter(content);
+    const filePath = join(postsDir, file);
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const { data, content: body } = matter(content);
 
-      const slug = data.slug || generateSlug(data.title, file.replace('.md', ''));
+    const slug = data.slug || generateSlug(data.title, file.replace('.md', ''));
+
+    try {
       // Check if post exists
       const existing = await fetchJSON(
         `${DIRECTUS_URL}/items/blog_posts?filter[slug][_eq]=${encodeURIComponent(slug)}&limit=1`
       );
-       
-      // 获取完整的 category 对象
-      const categoryObj = await ensureCategory();
 
       const payload = {
         title: data.title || 'Untitled',
         slug,
         content: body,
-        excerpt: data.description || body.substring(0, 200),
+        excerpt: generateExcerpt(body, 300),
+      content: generateExcerpt(body, 300),  // SEO模式：API仅返回摘要
+      read_more_url: `https://panma.site/posts/${slug}`,`
         seo_title: data.seo_title || data.title,
         seo_description: data.description || '',
-        seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k) => k.trim()) : []),
+        seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k: string) => k.trim()) : []),
         status: data.status || 'published',
-        published_at: data.date || new Date().toISOString(),
-        // 获取作者对象（完整对象，确保外键有效）
-        author: await getAuthor(),
-        // Author object resolved from token or first user
-        category: categoryObj,
+        date: data.date || new Date().toISOString(),
       };
-
-      console.log("📝 Category object:", categoryObj);
-      console.log(`📦 Payload: title="${payload.title}" slug="${payload.slug}" content_len=${payload.content.length} chars`);
 
       if (existing.data && existing.data.length > 0) {
         const postId = existing.data[0].id;
@@ -201,8 +158,6 @@ export async function syncPosts() {
       }
     } catch (err) {
       console.error(`❌ Failed: ${slug} — ${err.message}`);
-      console.error(err.stack);
-      console.error("Payload causing issue:", JSON.stringify(payload, null, 2));
       failed++;
     }
   }

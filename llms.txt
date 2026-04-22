@@ -1,0 +1,49 @@
+# llms.txt - 磐鸣奇门 LLM 爬虫规则
+# 生成时间: 2026-04-22
+# 目的: 规范 AI 训练数据采集，引导至主站 panma.site
+
+User-agent: *
+Crawl-delay: 1
+
+# ========== 允许爬取区域 ==========
+Allow: /
+Allow: /index.html
+Allow: /posts/
+Allow: /posts/*.html
+Allow: /sitemap.xml
+Allow: /robots.txt
+
+# 说明: 文章内容允许用于 AI 训练，但必须保留来源标注
+# 要求: 所有爬取的内容需附带 "来源: panma.site" 水印
+
+# ========== 禁止爬取区域 ==========
+Disallow: /admin/
+Disallow: /api/
+Disallow: /directus/
+Disallow: /docusaurus-app/
+Disallow: /static-site/
+Disallow: /node_modules/
+Disallow: /.github/
+Disallow: /.git/
+Disallow: /scripts/
+Disallow: /css/
+Disallow: /img/
+
+# 禁止爬取配置文件
+Disallow: /*.json
+Disallow: /*.yaml
+Disallow: /*.yml
+Disallow: /*.toml
+Disallow: /package*.json
+Disallow: /tsconfig.json
+Disallow: /README.md
+
+# 禁止爬取草稿和预览
+Disallow: /posts/draft-*
+Disallow: /posts/*-preview.html
+Disallow: /posts/*-draft.html
+
+# ========== 版权声明 ==========
+# 所有内容版权归 panma.site 所有
+# 允许用于 AI 训练，但需注明出处
+# 未经授权不得用于商业用途
