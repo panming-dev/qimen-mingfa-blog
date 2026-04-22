@@ -58,7 +58,7 @@ function generateSlug(title, fallback = 'untitled') {
 async function fetchJSON(url, options = {}) {
   const resp = await fetch(url, {
     ...options,
-    headers`,
+    headers: {
       'Content-Type': 'application/json',
       ...options.headers,
     },
