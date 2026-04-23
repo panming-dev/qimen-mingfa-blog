@@ -43,7 +43,7 @@ jobs:
       - name: Build site
         run: |
           set -x
-          hugo --minify --ignoreCache --logLevel debug --printPathWarnings
+          hugo --minify --ignoreCache --logLevel debug --printPathWarnings --environment production
 
       - name: Debug generated head
         run: |
