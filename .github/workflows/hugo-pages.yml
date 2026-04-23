@@ -22,7 +22,7 @@ jobs:
       - name: Install Hugo
         run: npm install -g hugo-extended
       - name: Build
-        run: hugo --minify
+        run: hugo --minify --theme PaperMod
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
