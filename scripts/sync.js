@@ -99,6 +99,7 @@ async function fetchJSON(url, options = {}) {
 export async function syncPosts() {
   // 确保 "奇门" 分类存在，获取其 UUID
   let defaultCategoryId = process.env.DEFAULT_CATEGORY_ID;
+  console.log('[DEBUG] DEFAULT_CATEGORY_ID env:', process.env.DEFAULT_CATEGORY_ID);
   if (!defaultCategoryId) {
     try {
       // 查询是否存在 "奇门" 分类
