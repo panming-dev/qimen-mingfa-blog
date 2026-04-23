@@ -9,14 +9,13 @@ theme = 'PaperMod'
 
 
 
+
 [taxonomy]
   categories = "categories"
   tags = "tags"
 
-  [[taxonomy.categories.slugs]]
-    name = "奇门"
+  [taxonomy.categories]
     slug = "qimen"
-
 [params]
   disableInlineCSS = true
   customCSS = ["https://cdn.jsdelivr.net/gh/adityatelange/hugo-PaperMod@master/static/css/papermod.css"]
