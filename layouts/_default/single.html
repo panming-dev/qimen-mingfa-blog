@@ -1,10 +1,8 @@
 {{- define "main" }}
 
-{{- /* 临时：强制显示 */ }}
 <div class="canonical-banner">
   📖 原文与互动版请访问 <a href="https://panma.site{{ .RelPermalink }}" target="_blank" rel="noopener">panma.site{{ .RelPermalink }}</a>
 </div>
-{{- end }}
 
 <article class="post-single">
   <header class="post-header">
@@ -56,7 +54,7 @@
       {{- end }}
     </ul>
     {{- if (.Param "ShowPostNavLinks") }}
-    {{- partial "post_nav_links.html" . }}
+    {{- partial "post_nav_links.html" . -}}
     {{- end }}
     {{- if (and site.Params.ShowShareButtons (ne .Params.disableShare true)) }}
     {{- partial "share_icons.html" . -}}
@@ -68,4 +66,4 @@
   {{- end }}
 </article>
 
-{{- end }}{{/* end main (forced) */}}
+{{- end }}{{/* end main */}}
