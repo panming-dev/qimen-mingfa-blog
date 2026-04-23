@@ -109,8 +109,9 @@ export async function syncPosts() {
       const payload = {
         title: data.title || 'Untitled',
         slug,
-        content: body,
-        excerpt: data.description || body.substring(0, 200),
+        content: `${excerptText}<p><a href="${readMoreUrl}" class="read-more">阅读全文 →</a></p>`,
+        const excerptText = data.description || body.substring(0, 300).trim();
+        const readMoreUrl = `https://mingfa.site/posts/${slug}/`;
         seo_title: data.seo_title || data.title,
         seo_description: data.description || '',
         seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k: string) => k.trim()) : []),
