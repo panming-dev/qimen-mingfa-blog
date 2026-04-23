@@ -50,6 +50,12 @@ jobs:
           echo "=== Section dirs ==="
           find public -type d | head -20
 
+      - name: Check Theme Assets
+        run: |
+          echo "=== Theme assets ==="
+          ls -la themes/PaperMod/assets/css/ 2>/dev/null || echo "NOT FOUND"
+          find themes/PaperMod -name "*.css" | head -10
+
       - name: Debug Public Assets
         run: |
           echo "=== Public structure ==="
