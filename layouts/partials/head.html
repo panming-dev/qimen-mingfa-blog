@@ -1,5 +1,5 @@
 {{- /* PaperMod custom head with CDN */ -}}
-{{- $title := .Title }}
+{{ $title := .Title }}
 {{- if .IsHome }}{{ $title = .Site.Title }}{{ end }}
 <title>{{ $title }}</title>
 {{- with .Description }}<meta name="description" content="{{ . | safeHTML }}">{{ end }}
