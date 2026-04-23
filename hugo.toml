@@ -4,6 +4,10 @@ title = '奇门鸣法·磐鸣'
 theme = 'PaperMod'
 
 [params]
+  disableInlineCSS = true
+  customCSS = ["https://cdn.jsdelivr.net/gh/adityatelange/hugo-PaperMod@master/static/css/papermod.css"]
+disableAssets = false
+
   defaultTheme = "auto"
   disableThemeToggle = false
   ShowShareButtons = true
@@ -47,3 +51,12 @@ theme = 'PaperMod'
   term = ["HTML"]
 
 canonifyURLs = true
+
+[assets]
+  disableHLJS = true
+
+[[params.assets]]
+  disableHLJS = true
+
+# 使用 CDN 加载 PaperMod CSS
+customCSS = ["https://cdn.jsdelivr.net/gh/adityatelange/hugo-PaperMod@master/static/css/papermod.css"]
