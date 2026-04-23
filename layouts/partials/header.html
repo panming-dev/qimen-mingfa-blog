@@ -42,7 +42,7 @@
                                         {{- $page_url := $currentUrl -}}
                                         {{- $is_search := eq (site.GetPage .KeyName).Layout "search" -}}
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{{ .Permalink }}" title="{{ .Title | default .Name }}{{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr) }}"
+                                            <a class="nav-link" href="{{ .URL | absURL }}" title="{{ .Title | default .Name }}{{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr) }}"
                                                 {{- cond $is_search (" accesskey=/"
                                                     | safeHTMLAttr) ("" | safeHTMLAttr) }}>
                                                 <span {{- if eq $menu_item_url $page_url }} class="active" {{- end }}>
