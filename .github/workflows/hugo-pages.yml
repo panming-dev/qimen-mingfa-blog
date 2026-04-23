@@ -39,8 +39,24 @@ jobs:
       - name: Build site
         run: |
           set -x
-          hugo --minify --ignoreCache --verbose
+hugo --minify --ignoreCache --logLevel debug --printPathWarnings
       
+      - name: Debug generated head
+        run: |
+          echo "=== index.html head ==="
+          if [ -f public/index.html ]; then
+            sed -n '/<head>/,/<\/head>/p' public/index.html | head -20
+          else
+            echo "index.html not found"
+            find public -name "*.html" | head -5
+          fi
+          echo ""
+          echo "=== post head ==="
+          if [ -f public/posts/basics/index.html ]; then
+            sed -n '/<head>/,/<\/head>/p' public/posts/basics/index.html | head -20
+          else
+            echo "post not found"
+          fi
       - name: Check output
         run: |
           echo "=== Public structure ==="
