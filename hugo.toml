@@ -31,7 +31,7 @@ disableAssets = false
   [[menu.main]]
     identifier = "categories"
     name = "分类"
-    url = "/categories/"
+    url = "/categories/index.html"
     weight = 3
   [[menu.main]]
     identifier = "tags"
