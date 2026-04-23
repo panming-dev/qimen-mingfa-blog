@@ -21,7 +21,7 @@ theme = 'PaperMod'
   tags = "tags"
   series = "series"
 [params]
-  canonicalURL = "https://mingfa.site"
+  canonicalURL = "https://panma.site"
   disableInlineCSS = true
   customCSS = []
   disableAssets = false

@@ -22,7 +22,7 @@
     {{- .Summary | default (printf "%s - %s" .Title  site.Title) }}{{- else }}
     {{- with site.Params.description }}{{ . }}{{- end }}{{- end }}{{- end -}}">
 <meta name="author" content="{{ (partial "author.html" . ) }}">
-{{- $canonical := site.Params.canonicalURL | default (printf "https://mingfa.site%s" .RelPermalink) -}}
+{{- $canonical := site.Params.canonicalURL | default (printf "https://panma.site%s" .RelPermalink) -}}
 <link rel="canonical" href="{{ $canonical }}">
 {{- if site.Params.analytics.google.SiteVerificationTag }}
 <meta name="google-site-verification" content="{{ site.Params.analytics.google.SiteVerificationTag }}">
