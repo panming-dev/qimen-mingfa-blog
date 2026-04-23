@@ -39,18 +39,18 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: List Public Directory
+      - name: Debug Public Assets
         run: |
-          echo "=== Listing public/ ==="
-          ls -laR public/ | head -100
-          echo "=== Check assets/css ==="
-          if [ -d public/assets/css ]; then
-            ls -la public/assets/css/
-            echo "=== First CSS file content (first 5 lines) ==="
-            head -5 public/assets/css/stylesheet*.css 2>/dev/null || echo "No CSS file"
-          else
-            echo "assets/css directory NOT found"
+          echo "=== Public structure ==="
+          find public -type f | sort > /tmp/public-files.txt
+          cat /tmp/public-files.txt
+          echo ""
+          echo "=== Assets CSS files ==="
+          ls -la public/assets/css/ 2>/dev/null || echo "assets/css NOT found"
+          if [ -f public/assets/css/stylesheet*.css ]; then
+            echo "=== First CSS file exists ==="
           fi
+
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
