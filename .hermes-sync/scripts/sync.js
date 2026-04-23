@@ -119,10 +119,14 @@ export async function syncPosts() {
     const { data, content: body } = matter(content);
 
     const slug = data.slug || generateSlug(data.title, file.replace('.md', ''));
-    console.log(`[DEBUG] Processing: ${file} → slug=${slug}, title=${data.title}`);
+
 
 
     try {
+    console.log(`[INFO] Processing file: ${file}`);
+    console.log(`[INFO]   title: ${data.title}`);
+    console.log(`[INFO]   frontmatter.slug: ${data.slug}`);
+    console.log(`[INFO]   resolved slug: ${slug}`);
       // Check if post exists
       const existing = await fetchJSON(
         `${DIRECTUS_URL}/items/blog_posts?filter[slug][_eq]=${encodeURIComponent(slug)}&limit=1`
