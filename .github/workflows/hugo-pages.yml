@@ -58,6 +58,7 @@ jobs:
           path: ./public
 
       - name: Deploy to Pages
+        needs: upload-artifact
         id: deployment
         uses: actions/deploy-pages@v4
         with:
