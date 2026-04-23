@@ -1,0 +1,73 @@
+{{- $baseURL := site.BaseURL -}}
+<header class="header">
+    {{- $currentPage := . }}
+    {{- $currentUrl := $currentPage.RelPermalink -}}
+    <nav id="navbar" class="navbar">
+        <div class="container-fluid navbar-container">
+            <div class="navbar-brand">
+                <a class="navbar-item navbar-logo" href="{{ $baseURL }}" title="{{ $.Site.Title | emojify }}">
+                    {{- $icon := $.Site.Data.icons.default -}}
+                    {{- if $.Site.Data.icons.header -}}
+                        {{- $icon = $.Site.Data.icons.header -}}
+                    {{- end -}}
+                    {{- if $icon -}}
+                        {{- $icon | safeHTML -}}
+                    {{- else -}}
+                        {{- $.Site.Title | emojify -}}
+                    {{- end -}}
+                </a>
+                <button type="button" class="navbar-menu-btn" data-bs-toggle="modal" data-bs-target="#navbarModal" aria-label="Menu" aria-controls="navbarModal">
+                    <span class="navbar-menu-btn-label">{{- $.Site.Data.i18n.menu | default "Menu" -}}</span>
+                    <span class="icon">
+                        <svg viewBox="0 0 24 24" width="100%" height="100%">
+                            <path fill="none" d="M0 0h24v24H0z"/>
+                            <path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z"/>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+            <div class="navbar-menu-container">
+                <div id="navbarModal" class="modal modal-menu" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{ $.Site.Title }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ $.Site.Data.i18n.close | default "Close" }}"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="navbar-menu">
+                                    <nav class="nav justify-content-center">
+                                        {{- range site.Menus.main -}}
+                                        {{- $menu_item_url := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL) ) | relURL -}}
+                                        {{- $page_url := $currentUrl -}}
+                                        {{- $is_search := eq (site.GetPage .KeyName).Layout "search" -}}
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ $baseURL }}{{ .URL }}" title="{{ .Title | default .Name }}{{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr) }}"
+                                                {{- cond $is_search (" accesskey=/"
+                                                    | safeHTMLAttr) ("" | safeHTMLAttr) }}>
+                                                <span {{- if eq $menu_item_url $page_url }} class="active" {{- end }}>
+                                                    {{- .Pre -}}
+                                                    {{- .Name -}}
+                                                    {{ .Post -}}
+                                                </span>
+                                                {{- if (findRE "://" .URL) -}}
+                                                &nbsp;
+                                                <svg fill="none" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" height="12" width="12">
+                                                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
+                                                    <path d="M15 3h6v6"></path>
+                                                    <path d="M10 14L21 3"></path>
+                                                </svg>
+                                                {{- end -}}
+                                            </a>
+                                        </li>
+                                        {{- end -}}
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
