@@ -10,60 +10,22 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  cancel-in-progress: false
-  group: "pages"
-
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: github-pages
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: false
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
         with:
-          node-version: '20'
-
-      - name: Install Hugo
-        run: npm install -g hugo-extended
-
-      - name: Debug Config
-        run: |
-          echo "baseURL: $(grep '^baseURL' hugo.toml)"
-          echo "Theme: $(grep '^theme' hugo.toml)"
-          echo "Menus:"
-          grep -A10 '\[menu' hugo.toml || true
+          hugo-version: '0.160.1'
+          extended: true
 
       - name: Build
         run: hugo --minify
-
-      - name: List Taxonomy Pages
-        run: |
-          echo "=== Taxonomy pages ==="
-          find public -type f -name "*categories*" -o -name "*tags*" 2>/dev/null
-          echo ""
-          echo "=== Section dirs ==="
-          find public -type d | head -20
-
-      - name: Check Theme Assets
-        run: |
-          echo "=== Theme assets ==="
-          ls -la themes/PaperMod/assets/css/ 2>/dev/null || echo "NOT FOUND"
-          find themes/PaperMod -name "*.css" | head -10
-
-      - name: Debug Public Assets
-        run: |
-          echo "=== Public structure ==="
-          find public -type f | sort
-          echo ""
-          echo "=== Assets directory ==="
-          ls -la public/assets/ 2>/dev/null || echo "assets/ NOT found"
-          ls -la public/assets/css/ 2>/dev/null || echo "assets/css NOT found"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -73,13 +35,11 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          artifact: github-pages
-          timeout: 60s
