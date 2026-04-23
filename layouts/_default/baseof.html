@@ -22,6 +22,8 @@
 <body id="top">
 {{- end }}
     {{ partialCached "header.html" . .Page -}}
+        
+    <main class="main">
         {{- with .File }}
         <div class="seo-notice-banner">
   <div class="container">
@@ -32,7 +34,6 @@
   </div>
 </div>
         {{- end }}
-    <main class="main">
         {{- block "main" . }}{{ end }}
     </main>
     {{ partialCached "footer.html" . .Layout .Kind (.Param "hideFooter") (.Param "ShowCodeCopyButtons") -}}
