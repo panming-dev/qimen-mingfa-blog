@@ -97,6 +97,31 @@ async function fetchJSON(url, options = {}) {
  * Main sync function
  */
 export async function syncPosts() {
+  // 确保 "奇门" 分类存在，获取其 UUID
+  let defaultCategoryId = process.env.DEFAULT_CATEGORY_ID;
+  if (!defaultCategoryId) {
+    try {
+      // 查询是否存在 "奇门" 分类
+      const cats = await fetchJSON('/items/categories?filter[name][_eq]=奇门&limit=1');
+      if (cats.data && cats.data.length > 0) {
+        defaultCategoryId = cats.data[0].id;
+        console.log(`[INFO] Found existing category: 奇门 (${defaultCategoryId})`);
+      } else {
+        // 创建 "奇门" 分类
+        const newCat = await fetchJSON('/items/categories', {
+          method: 'POST',
+          body: JSON.stringify({ name: '奇门', slug: 'qi-men' })
+        });
+        defaultCategoryId = newCat.data.id;
+        console.log(`[INFO] Created category: 奇门 (${defaultCategoryId})`);
+      }
+    } catch (err) {
+      console.error('[ERROR] Failed to get/create category:', err.message);
+      // 如果失败，使用一个占位符（会导致错误）
+      defaultCategoryId = '00000000-0000-0000-0000-000000000000';
+    }
+  }
+
   // 获取默认作者 ID
 
   const postsDir = join(__dirname, '..', '..', 'content', 'posts');  // Hugo source posts
