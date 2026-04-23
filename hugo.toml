@@ -17,16 +17,9 @@ theme = 'PaperMod'
 
 
 [taxonomies]
-  [taxonomies.category]
-    name = "categories"
-  [taxonomies.tag]
-    name = "tags"
-  [taxonomies.series]
-    name = "series"
-
-  name = "奇门"
-    slug = "qimen"
-
+  category = "categories"
+  tag = "tags"
+  series = "series"
 [params]
   disableInlineCSS = true
   customCSS = []
