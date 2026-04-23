@@ -211,6 +211,8 @@ export async function syncPosts() {
         status: data.status || 'published',
         date: data.date || new Date().toISOString(),
       };
+      console.log('[DEBUG] Payload category field:', JSON.stringify(payload.category));
+      console.log('[DEBUG] defaultCategoryId at payload time:', JSON.stringify(defaultCategoryId));
 
       if (existing.data && existing.data.length > 0) {
         const postId = existing.data[0].id;
