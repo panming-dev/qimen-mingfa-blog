@@ -126,12 +126,13 @@ export async function syncPosts() {
         `${DIRECTUS_URL}/items/blog_posts?filter[slug][_eq]=${encodeURIComponent(slug)}&limit=1`
       );
 
+      const excerpt = generateExcerpt(body, 300);
       const payload = {
         title: data.title || 'Untitled',
         slug,
-        content: generateExcerpt(body, 300),  // SEO模式：API仅返回摘要
-        excerpt: generateExcerpt(body, 300),
-        read_more_url: `https://panma.site/posts/${slug}`,
+        excerpt,
+        content: `${excerpt}<p><a href="https://panma.site/posts/${slug}" class="read-more">阅读全文 →</a></p>`,  // 双模：摘要+全文链接
+        // read_more_url 已内嵌到 content，无需独立字段
         seo_title: data.seo_title || data.title,
         seo_description: data.description || '',
         seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k) => k.trim()) : []),
