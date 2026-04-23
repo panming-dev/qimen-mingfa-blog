@@ -41,10 +41,17 @@ jobs:
 
       - name: List Public Directory
         run: |
-          echo "=== Public directory structure ==="
-          find public -type f | head -30
-          echo "=== Assets exist? ==="
-          ls -la public/assets/ 2>/dev/null || echo "assets/ not found"
+          echo "=== Listing public/ ==="
+          ls -laR public/ | head -100
+          echo "=== Check assets/css ==="
+          if [ -d public/assets/css ]; then
+            ls -la public/assets/css/
+            echo "=== First CSS file content (first 5 lines) ==="
+            head -5 public/assets/css/stylesheet*.css 2>/dev/null || echo "No CSS file"
+          else
+            echo "assets/css directory NOT found"
+          fi
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
