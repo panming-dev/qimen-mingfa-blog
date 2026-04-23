@@ -21,6 +21,20 @@ jobs:
           node-version: '20'
       - name: Install Hugo
         run: npm install -g hugo-extended
+      - name: Debug Hugo Config
+        run: |
+          echo "=== hugo.toml ==="
+          cat hugo.toml
+          echo "=== Theme Dir ==="
+          ls -la themes/
+          echo "=== PaperMod layouts ==="
+          find themes/PaperMod/layouts -name "*.html" | head -10
+          echo "=== Hugo Version ==="
+          hugo version
+          echo "=== Hugo Config Dump ==="
+          hugo config
+
+
       - name: Build
         run: hugo --minify --theme PaperMod
       - name: Setup Pages
