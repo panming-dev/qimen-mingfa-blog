@@ -1,20 +1,20 @@
-{{- $normalize := resources.Get "css/normalize.css" -}}
-{{- $papermod := resources.Get "css/papermod.css" -}}
-{{- $theme_vars := resources.Get "css/theme-vars.css" -}}
-
-{{- if or (not $normalize) (or (not $papermod) (not $theme_vars)) }}
-  {{- warnf "Local PaperMod assets missing, using CDN fallback" -}}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/adityatelange/hugo-PaperMod@master/static/css/normalize.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/adityatelange/hugo-PaperMod@master/static/css/papermod.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/adityatelange/hugo-PaperMod@master/static/css/theme-vars.css">
-{{- else }}
-  {{- $options := (dict "targetPath" "css/style.css" "outputStyle" "compressed" "enableSourceMap" true) -}}
-  {{- $normalize = $normalize | resources.Minify | resources.Fingerprint $options | resources.PostProcess -}}
-  {{- $papermod = $papermod | resources.Minify | resources.Fingerprint $options | resources.PostProcess -}}
-  {{- $theme_vars = $theme_vars | resources.Minify | resources.Fingerprint $options | resources.PostProcess -}}
-<link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
-{{- end }}
-
-{{- partial "templates/opengraph.html" . -}}
-{{- partial "templates/twitter_cards.html" . -}}
-{{- partial "templates/schema_json.html" . -}}
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode | default "en" }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{ if .IsHome }}
+    <title>{{ .Site.Title }}</title>
+    {{ else }}
+    <title>{{ .Title }} - {{ .Site.Title }}</title>
+    {{ end }}
+    {{ with .Description }}
+    <meta name="description" content="{{ . }}">
+    {{ end }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/papermod@2.6.1/dist/css/papermod.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/papermod@2.6.1/dist/css/custom.css">
+    <style>
+        :root {{- /* PaperMod CSS variables (minimal) */ -}} {}
+    </style>
+</head>
+<body>
