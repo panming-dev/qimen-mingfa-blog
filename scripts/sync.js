@@ -77,7 +77,10 @@ function generateSlug(title, fallback = 'untitled') {
  * Fetch JSON with error handling
  */
 async function fetchJSON(url, options = {}) {
-  const resp = await fetch(url, {
+  // 确保使用绝对 URL（拼接 DIRECTUS_URL）
+  const baseUrl = DIRECTUS_URL?.replace(/\/$/, '');
+  const fullUrl = url.startsWith('http') ? url : `${baseUrl}${url}`;
+  const resp = await fetch(fullUrl, {
     ...options,
     headers: {
       'Authorization': `Bearer ${DIRECTUS_TOKEN}`,
