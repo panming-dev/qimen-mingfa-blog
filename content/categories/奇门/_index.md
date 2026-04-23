@@ -1,5 +1,5 @@
 ---
 title: "奇门"
-slug: "qimen"
+url: "/categories/qimen/"
 ---
 
