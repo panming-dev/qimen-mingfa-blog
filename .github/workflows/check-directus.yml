@@ -1,0 +1,16 @@
+name: Check Directus Post
+on:
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check post in Directus
+        env:
+          DIRECTUS_URL: ${{ secrets.DIRECTUS_URL }}
+          DIRECTUS_TOKEN: ${{ secrets.DIRECTUS_TOKEN }}
+        run: |
+          echo "DIRECTUS_URL=$DIRECTUS_URL"
+          # 查询所有文章的 slug
+          curl -s -H "Authorization: Bearer $DIRECTUS_TOKEN" "$DIRECTUS_URL/items/blog_posts?limit=50&fields=slug,title" | jq '.data[] | {slug, title}'
