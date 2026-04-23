@@ -98,6 +98,7 @@ async function fetchJSON(url, options = {}) {
  */
 export async function syncPosts() {
   // 获取默认作者 ID
+
   const postsDir = join(__dirname, '..', '..', 'content', 'posts');  // Hugo source posts
   console.log(`📁 Scanning: ${postsDir}`);
 
