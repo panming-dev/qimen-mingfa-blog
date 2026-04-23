@@ -1,0 +1,36 @@
+name: Fix Missing Post
+on:
+  workflow_dispatch:
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install jq
+        run: sudo apt-get install -y jq
+      - name: Check and create post
+        env:
+          DIRECTUS_URL: ${{ secrets.DIRECTUS_URL }}
+          DIRECTUS_TOKEN: ${{ secrets.DIRECTUS_TOKEN }}
+        run: |
+          token="$DIRECTUS_TOKEN"
+          url="$DIRECTUS_URL"
+          
+          # 读取文章信息
+          file="content/posts/di-yi-zhang-4-5-2.md"
+          title=$(grep '^title:' "$file" | cut -d: -f2- | tr -d ' "')
+          slug=$(grep '^slug:' "$file" | cut -d: -f2- | tr -d ' ')
+          echo "标题: $title"
+          echo "Slug: $slug"
+          
+          # 查询是否已存在
+          existing=$(curl -s -H "Authorization: Bearer $token" "$url/items/blog_posts?filter[slug][_eq]=$slug&limit=1")
+          count=$(echo "$existing" | jq '.data | length')
+          
+          if [ "$count" -eq 0 ]; then
+            echo "文章不存在，创建中..."
+            # 创建文章（最小字段）
+            curl -s -X POST "$url/items/blog_posts"               -H "Authorization: Bearer $token"               -H "Content-Type: application/json"               -d "{\"title\": \"$title\", \"slug\": \"$slug\", \"status\": \"published\", \"content\": \"待更新\"}"
+          else
+            echo "文章已存在: $(echo "$existing" | jq -r '.data[0].id')"
+          fi
