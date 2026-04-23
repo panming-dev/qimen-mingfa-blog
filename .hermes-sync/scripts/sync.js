@@ -144,6 +144,8 @@ export async function syncPosts() {
     }
   }
   console.log('[DEBUG] Final defaultCategoryId:', defaultCategoryId);
+  console.log('[DEBUG] Final defaultCategoryId JSON:', JSON.stringify(defaultCategoryId));
+  console.log('[DEBUG] Type:', typeof defaultCategoryId, 'Length:', String(defaultCategoryId).length);
 
   // 获取默认作者 ID
 
