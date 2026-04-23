@@ -122,6 +122,7 @@ export async function syncPosts() {
       defaultCategoryId = '00000000-0000-0000-0000-000000000000';
     }
   }
+  console.log('[DEBUG] Final defaultCategoryId:', defaultCategoryId);
 
   // 获取默认作者 ID
 
