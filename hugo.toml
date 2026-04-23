@@ -11,6 +11,7 @@ theme = 'PaperMod'
 
 
 
+
 [taxonomy]
   categories = "categories"
   tags = "tags"
@@ -21,7 +22,7 @@ theme = 'PaperMod'
 
 [params]
   disableInlineCSS = true
-  customCSS = ["https://cdn.jsdelivr.net/gh/adityatelange/hugo-PaperMod@master/static/css/papermod.css"]
+  customCSS = []
   disableAssets = false
   defaultTheme = "auto"
   disableThemeToggle = false
@@ -54,10 +55,6 @@ theme = 'PaperMod'
     url = "/tags/"
     weight = 4
 
-[taxonomies]
-  categories = "categories"
-  tag = "tags"
-  series = "series"
 
 [outputs]
   home = ["HTML"]
