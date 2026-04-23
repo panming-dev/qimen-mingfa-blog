@@ -14,9 +14,11 @@ theme = 'PaperMod'
 
 
 
-[taxonomy]
-  [taxonomy.category]
-    [[taxonomy.category.slugs]]
+
+[taxonomies]
+  [taxonomies.category]
+    name = "categories"
+    [[taxonomies.category.slugs]]
       name = "奇门"
       slug = "qimen"
 [params]
