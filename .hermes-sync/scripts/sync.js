@@ -118,6 +118,8 @@ export async function syncPosts() {
     const content = fs.readFileSync(filePath, 'utf-8');
     const { data, content: body } = matter(content);
 
+    console.log(`[DEBUG] data.slug type: ${typeof data.slug}, value: ${data.slug}`);
+    console.log(`[DEBUG] data.title: ${data.title}`);
     const slug = data.slug || generateSlug(data.title, file.replace('.md', ''));
 
 
