@@ -119,6 +119,8 @@ export async function syncPosts() {
     const { data, content: body } = matter(content);
 
     const slug = data.slug || generateSlug(data.title, file.replace('.md', ''));
+    console.log(`[DEBUG] Processing: ${file} → slug=${slug}, title=${data.title}`);
+
 
     try {
       // Check if post exists
