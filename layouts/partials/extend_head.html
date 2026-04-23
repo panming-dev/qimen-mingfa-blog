@@ -1,7 +1,3 @@
-{{- /* Global canonical override for GitHub Pages */ -}}
-{{- $canonical := .Permalink | replace (site.BaseURL) "https://mingfa.site/" }}
-<link rel="canonical" href="{{ $canonical }}">
-
 {{- /* Dual-mode layout banner styles */ -}}
 {{- if and hugo.IsProduction (not .IsHome) }}
 <style>
