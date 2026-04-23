@@ -197,13 +197,8 @@ export async function syncPosts() {
         author: 'e51ecbce-e34f-45d6-b863-030511108267',
         // category 仅在 UUID 有效时添加
         excerpt,
-        // category 字段条件性添加（需有效 UUID）
-        ...( (() => {
-        const clean = (defaultCategoryId || '').trim();
-        const valid = clean && clean !== '00000000-0000-0000-0000-000000000000';
-        console.log('[DEBUG] category UUID:', JSON.stringify(clean), 'valid:', valid);
-        return valid ? { category: clean } : {};
-      })() )
+        // category 字段：仅当 UUID 有效时才添加
+        ...( (defaultCategoryId && defaultCategoryId !== '00000000-0000-0000-0000-000000000000')
           ? { category: defaultCategoryId }
           : {}),
         content: `${excerpt}<p><a href="https://panma.site/posts/${slug}" class="read-more">阅读全文 →</a></p>`,  // 双模：摘要+全文链接
