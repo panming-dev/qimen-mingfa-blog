@@ -233,6 +233,8 @@ export async function syncPosts() {
         // 反向同步：从 Directus 读取完整内容并写回本地
         try {
           const full = await fetchJSON(`${DIRECTUS_URL}/items/blog_posts/${postId}?fields=*`);
+          console.log('[DEBUG] Directus full record keys:', Object.keys(full.data || {}));
+          console.log('[DEBUG] Directus content field:', JSON.stringify(full.data?.content));
           if (full.data && full.data.content) {
             const filePath = join(postsDir, file);
             const original = fs.readFileSync(filePath, 'utf-8');
