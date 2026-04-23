@@ -35,6 +35,10 @@ if (!DIRECTUS_URL || !DIRECTUS_TOKEN) {
   process.exit(1);
 }
 
+// Canonical URL for the blog (used for absolute links in Directus content)
+// Should match hugo.toml: canonicalURL
+const CANONICAL_URL = process.env.CANONICAL_URL?.replace(/\/$/, '') || 'https://panma.site';
+
 /**
  * Generate slug from Chinese title using pinyin
  */
@@ -201,18 +205,16 @@ export async function syncPosts() {
       );
 
       const excerpt = generateExcerpt(body, 300);
+      const postUrl = `${CANONICAL_URL}/posts/${slug}/`;  // Trailing slash per Hugo permalinks
       const payload = {
         title: data.title || 'Untitled',
         slug,
         author: 'e51ecbce-e34f-45d6-b863-030511108267',
-        // category 仅在 UUID 有效时添加
         excerpt,
-        // category 字段：仅当 UUID 有效时才添加
         ...( (defaultCategoryId && defaultCategoryId !== '00000000-0000-0000-0000-000000000000')
           ? { category: defaultCategoryId }
           : {}),
-        content: `${excerpt}<p><a href="https://panma.site/posts/${slug}" class="read-more">阅读全文 →</a></p>`,  // 双模：摘要+全文链接
-        // read_more_url 已内嵌到 content，无需独立字段
+        content: `${excerpt}<p><a href="${postUrl}" class="read-more">阅读全文 →</a></p>`,
         seo_title: data.seo_title || data.title,
         seo_description: data.description || '',
         seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k) => k.trim()) : []),

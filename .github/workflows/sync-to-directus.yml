@@ -34,5 +34,6 @@ jobs:
         env:
           DIRECTUS_URL: ${{ secrets.DIRECTUS_URL }}
           DIRECTUS_TOKEN: ${{ secrets.DIRECTUS_TOKEN }}
+          CANONICAL_URL: ${{ secrets.CANONICAL_URL }}
         run: node scripts/sync.js
         working-directory: ${{ github.workspace }}/.hermes-sync
