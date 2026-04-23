@@ -42,6 +42,14 @@ jobs:
       - name: Build
         run: hugo --minify
 
+      - name: List Taxonomy Pages
+        run: |
+          echo "=== Taxonomy pages ==="
+          find public -type f -name "*categories*" -o -name "*tags*" 2>/dev/null
+          echo ""
+          echo "=== Section dirs ==="
+          find public -type d | head -20
+
       - name: Debug Public Assets
         run: |
           echo "=== Public structure ==="
