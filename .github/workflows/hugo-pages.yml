@@ -1,17 +1,23 @@
 name: Deploy Hugo to Pages
+
 on:
   push:
     branches: [master]
-  workflow_dispatch:
+  workflow_dispatch: {}
+
 permissions:
   contents: read
   pages: write
   id-token: write
 
+concurrency:
+  cancel-in-progress: false
+  group: "pages"
+
 jobs:
   build:
-    environment: github-pages
     runs-on: ubuntu-latest
+    environment: github-pages
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,46 +32,39 @@ jobs:
       - name: Install Hugo
         run: npm install -g hugo-extended
 
-      - name: Debug
+      - name: Debug Config
         run: |
           echo "baseURL: $(grep '^baseURL' hugo.toml)"
           echo "Theme: $(grep '^theme' hugo.toml)"
-          echo "Custom header: $(test -f layouts/partials/header.html && echo YES || echo NO)"
-          ls -la layouts/partials/ 2>/dev/null || echo "No partials dir"
+          echo "Menus:"
+          grep -A10 '\[menu' hugo.toml || true
 
       - name: Build
         run: hugo --minify
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
       - name: Debug Public Assets
         run: |
           echo "=== Public structure ==="
-          find public -type f | sort > /tmp/public-files.txt
-          cat /tmp/public-files.txt
+          find public -type f | sort
           echo ""
-          echo "=== Assets CSS files ==="
+          echo "=== Assets directory ==="
+          ls -la public/assets/ 2>/dev/null || echo "assets/ NOT found"
           ls -la public/assets/css/ 2>/dev/null || echo "assets/css NOT found"
-          if [ -f public/assets/css/stylesheet*.css ]; then
-            echo "=== First CSS file exists ==="
-          fi
-
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to Pages
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          artifact_name: github-pages
-          timeout: 10s
-      - name: List Public
-        run: ls -la public/ && echo "---" && find public -name "*.html" | head -5
-      - name: Debug Head Output
-        run: |
-          echo "=== HEAD ==="
-          sed -n '/<head>/,/<\/head>/p' public/index.html | head -30
+          timeout: 60s
