@@ -12,9 +12,10 @@ theme = 'PaperMod'
 
 
 
+
 [taxonomy]
-  categories = "categories"
-  tags = "tags"
+  [taxonomy.categories]
+  [taxonomy.tags]
 
   [[taxonomy.categories.slugs]]
     name = "奇门"
