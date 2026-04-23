@@ -1,18 +1,7 @@
 ---
 title: "第一章 …… 452"
-date: 2026-04-20
+categories: ["奇门"]
 slug: di-yi-zhang-4-5-2
-description: "奇门遁甲的基础概念与核心原理介绍，涵盖阴阳、五行、天干地支等基础知识。"
-categories:
-  - "奇门"
-tags:
-  - "第一章"
-  - "基础概念"
-  - "阴阳五行"
-  - "天干地支"
-difficulty: L1
-seo_title: "第一章 …… 452"
-seo_description: "奇门遁甲基础概念与核心原理"
 ---
 
 第一章 …… 452
