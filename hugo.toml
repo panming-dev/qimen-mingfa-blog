@@ -39,3 +39,4 @@ theme = 'PaperMod'
   category = "categories"
   tag = "tags"
   series = "series"
+canonifyURLs = true
