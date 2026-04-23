@@ -230,6 +230,22 @@ export async function syncPosts() {
         });
         console.log(`✅ Updated: ${slug}`);
         updated++;
+        // 反向同步：从 Directus 读取完整内容并写回本地
+        try {
+          const full = await fetchJSON(`${DIRECTUS_URL}/items/blog_posts/${postId}?fields=*`);
+          if (full.data && full.data.content) {
+            const filePath = join(postsDir, file);
+            const original = fs.readFileSync(filePath, 'utf-8');
+            if (original.includes('---')) {
+              const parts = original.split('---', 2);
+              const newBody = `---${parts[1]}---\n\n${full.data.content}`;
+              fs.writeFileSync(filePath, newBody, 'utf-8');
+              console.log(`📝 Synced content back to local: ${file}`);
+            }
+          }
+        } catch (e) {
+          console.log('[WARN] Could not sync back:', e.message);
+        }
       } else {
         const result = await fetchJSON(`${DIRECTUS_URL}/items/blog_posts`, {
           method: 'POST',
@@ -237,6 +253,24 @@ export async function syncPosts() {
         });
         console.log(`✅ Created: ${slug} (id: ${result.data.id})`);
         created++;
+        // 反向同步：从 Directus 读取完整内容并写回本地 Markdown
+        try {
+          const full = await fetchJSON(`${DIRECTUS_URL}/items/blog_posts/${result.data.id}?fields=*`);
+          if (full.data && full.data.content) {
+            const fullContent = full.data.content;
+            const filePath = join(postsDir, file);
+            const original = fs.readFileSync(filePath, 'utf-8');
+            // 替换 frontmatter 后的 body 部分
+            if (original.includes('---')) {
+              const parts = original.split('---', 2);
+              const newBody = `---${parts[1]}---\n\n${fullContent}`;
+              fs.writeFileSync(filePath, newBody, 'utf-8');
+              console.log(`📝 Synced content back to local: ${file}`);
+            }
+          }
+        } catch (e) {
+          console.log('[WARN] Could not sync back from Directus:', e.message);
+        }
       }
     } catch (err) {
       console.error(`❌ Failed: ${slug} — ${err.message}`);
