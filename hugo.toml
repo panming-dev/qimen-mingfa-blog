@@ -5,7 +5,7 @@ theme = 'PaperMod'
 
 # URL 生成策略：文章使用 filename (01-xxx.html) 并强制 .html 后缀
 [permalinks]
-  posts = "/posts/:slug.html"
+  posts = "/posts/:slug/"
 
 [params]
   disableInlineCSS = true
