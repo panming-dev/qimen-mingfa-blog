@@ -120,7 +120,13 @@ export async function syncPosts() {
 
     console.log(`[DEBUG] data.slug type: ${typeof data.slug}, value: ${data.slug}`);
     console.log(`[DEBUG] data.title: ${data.title}`);
-    const slug = data.slug || generateSlug(data.title, file.replace('.md', ''));
+    // 优先使用 frontmatter slug；如果包含中文字符则使用文件名（避免解析错误）
+    const baseName = file.replace('.md', '');
+    let slug = data.slug;
+    if (!slug || /[\u4e00-\u9fa5]/.test(slug)) {
+      slug = baseName;
+    }
+    console.log(`[DEBUG] baseName: ${baseName}, using slug: ${slug}`);
 
 
 
