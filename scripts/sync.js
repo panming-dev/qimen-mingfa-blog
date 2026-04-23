@@ -106,8 +106,24 @@ export async function syncPosts() {
   console.log('[DEBUG] DEFAULT_CATEGORY_ID env:', process.env.DEFAULT_CATEGORY_ID);
   if (!defaultCategoryId) {
     try {
-      // 查询是否存在 "奇门" 分类
-      const cats = await fetchJSON('/items/categories?filter[name][_eq]=奇门&limit=1');
+      // 策略1: 从已有 blog_posts 推断 category UUID（无需 categories 权限）
+      console.log('[INFO] Attempting to infer category from existing blog_posts...');
+      try {
+        const knownSlug = 'di-er-zhang-4-6-3';
+        const existing = await fetchJSON(`/items/blog_posts?filter[slug][_eq]=${knownSlug}&limit=1&fields=id,category`);
+        if (existing.data && existing.data.length > 0 && existing.data[0].category) {
+          defaultCategoryId = existing.data[0].category;
+          console.log(`[INFO] Inferred category UUID from existing post: ${defaultCategoryId}`);
+        }
+      } catch (e) {
+        console.log('[WARN] Could not infer from blog_posts:', e.message);
+      }
+
+      // 策略2: 如果仍未获取，尝试直接查询/创建 categories
+      if (!defaultCategoryId) {
+        console.log('[INFO] Attempting to query/create category directly...');
+        // 查询是否存在 "奇门" 分类
+        const cats = await fetchJSON('/items/categories?filter[name][_eq]=奇门&limit=1');
       if (cats.data && cats.data.length > 0) {
         defaultCategoryId = cats.data[0].id;
         console.log(`[INFO] Found existing category: 奇门 (${defaultCategoryId})`);
