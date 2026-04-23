@@ -47,3 +47,7 @@ jobs:
       - name: Deploy to Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Debug Head Output
+        run: |
+          echo "=== HEAD ==="
+          sed -n '/<head>/,/<\/head>/p' public/index.html | head -30
