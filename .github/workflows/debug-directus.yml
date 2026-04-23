@@ -1,0 +1,16 @@
+
+name: Debug Directus Content
+on:
+  workflow_dispatch:
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Query Directus
+        env:
+          DIRECTUS_URL: ${{ secrets.DIRECTUS_URL }}
+          DIRECTUS_TOKEN: ${{ secrets.DIRECTUS_TOKEN }}
+        run: |
+          curl -s "${DIRECTUS_URL}/items/blog_posts?filter[slug][_eq]=di-yi-zhang-4-5-2&fields=*"             -H "Authorization: Bearer $DIRECTUS_TOKEN"             -H "Content-Type: application/json" | jq .
