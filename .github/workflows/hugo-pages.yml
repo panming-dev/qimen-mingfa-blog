@@ -21,21 +21,20 @@ jobs:
           node-version: '20'
       - name: Install Hugo
         run: npm install -g hugo-extended
-      - name: Debug Hugo Config
+            - name: Debug Hugo Config
         run: |
           echo "=== hugo.toml ==="
           cat hugo.toml
-          echo "=== Theme Dir ==="
-          ls -la themes/
-          echo "=== PaperMod layouts ==="
-          find themes/PaperMod/layouts -name "*.html" | head -10
+          echo "=== Theme layouts ==="
+          find themes/PaperMod/layouts -type f | sort
+          echo "=== Custom layouts ==="
+          find layouts -type f | sort
+          echo "=== Header override exists? ==="
+          ls -la layouts/partials/header.html 2>/dev/null || echo "No custom header"
           echo "=== Hugo Version ==="
           hugo version
           echo "=== Hugo Config Dump ==="
-          hugo config
-
-
-      - name: Build
+          hugo config- name: Build
         run: hugo --minify --theme PaperMod --noCache
       - name: Setup Pages
         uses: actions/configure-pages@v4
