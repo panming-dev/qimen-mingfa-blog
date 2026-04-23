@@ -9,11 +9,11 @@ theme = 'PaperMod'
 
 
 [taxonomy]
-  category = "categories"
+  categories = "categories"
   tag = "tags"
 
   # 分类 slug 映射（中文→英文）
-  [[taxonomy.category.slugs]]
+  [[taxonomy.categories.slugs]]
     name = "奇门"
     slug = "qimen"
 [params]
@@ -52,7 +52,7 @@ theme = 'PaperMod'
     weight = 4
 
 [taxonomies]
-  category = "categories"
+  categories = "categories"
   tag = "tags"
   series = "series"
 
