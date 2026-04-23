@@ -24,8 +24,7 @@ theme = 'PaperMod'
   [taxonomies.series]
     name = "series"
 
-  [[taxonomies.category.slugs]]
-    name = "奇门"
+  name = "奇门"
     slug = "qimen"
 
 [params]
