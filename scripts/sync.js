@@ -1,4 +1,5 @@
 import fs from 'fs';
+console.log('=== SYNC SCRIPT LOADED ===');
 import matter from 'gray-matter';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
