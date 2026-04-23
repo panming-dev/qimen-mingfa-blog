@@ -17,9 +17,12 @@ theme = 'PaperMod'
 
 
 [taxonomies]
-  category = "categories"
-  tag = "tags"
-  series = "series"
+  [taxonomies.category]
+    name = "categories"
+  [taxonomies.tag]
+    name = "tags"
+  [taxonomies.series]
+    name = "series"
 
   [[taxonomies.category.slugs]]
     name = "奇门"
