@@ -39,6 +39,12 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: List Public Directory
+        run: |
+          echo "=== Public directory structure ==="
+          find public -type f | head -30
+          echo "=== Assets exist? ==="
+          ls -la public/assets/ 2>/dev/null || echo "assets/ not found"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -47,6 +53,8 @@ jobs:
       - name: Deploy to Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: List Public
+        run: ls -la public/ && echo "---" && find public -name "*.html" | head -5
       - name: Debug Head Output
         run: |
           echo "=== HEAD ==="
