@@ -3,25 +3,6 @@ import matter from 'gray-matter';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
-// SEO 摘要生成：截取前300字，保持句子完整
-function generateExcerpt(content, maxLength = 300) {
-  const plainText = content.replace(/<[^>]+>/g, '').trim();
-  if (plainText.length <= maxLength) return plainText;
-  const sentences = plainText.split(/[。！？.!?]/);
-  let excerpt = '';
-  for (let sentence of sentences) {
-    const candidate = excerpt + sentence + '。';
-    if (candidate.length <= maxLength) {
-      excerpt = candidate;
-    } else {
-      break;
-    }
-  }
-  if (excerpt.length >= 100 && excerpt.length <= maxLength) {
-    return excerpt + '...';
-  }
-  return plainText.substring(0, maxLength) + '...';
-}
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -116,37 +97,30 @@ export async function syncPosts() {
     const filePath = join(postsDir, file);
     const content = fs.readFileSync(filePath, 'utf-8');
     const { data, content: body } = matter(content);
+    console.log(`[DEBUG] ${file} → slug:${data.slug} title:${data.title?.slice(0,20)}`);
 
-    console.log(`[DEBUG] data.slug type: ${typeof data.slug}, value: ${data.slug}`);
-    console.log(`[DEBUG] data.title: ${data.title}`);
-    // 优先使用 frontmatter slug；如果包含中文字符则使用文件名（避免解析错误）
+    // 优先使用 frontmatter slug；如含中文则使用文件名
     const baseName = file.replace('.md', '');
     let slug = data.slug;
     if (!slug || /[\u4e00-\u9fa5]/.test(slug)) {
       slug = baseName;
     }
-    console.log(`[DEBUG] baseName: ${baseName}, using slug: ${slug}`);
 
     try {
-    console.log(`[INFO] Processing file: ${file}`);
-    console.log(`[INFO]   title: ${data.title}`);
-    console.log(`[INFO]   frontmatter.slug: ${data.slug}`);
-    console.log(`[INFO]   resolved slug: ${slug}`);
       // Check if post exists
       const existing = await fetchJSON(
         `${DIRECTUS_URL}/items/blog_posts?filter[slug][_eq]=${encodeURIComponent(slug)}&limit=1`
       );
 
-      const excerpt = generateExcerpt(body, 300);
+      const excerpt = data.description || body.substring(0, 300).trim();
       const payload = {
         title: data.title || 'Untitled',
         slug,
         excerpt,
-        content: `${excerpt}<p><a href="https://panma.site/posts/${slug}" class="read-more">阅读全文 →</a></p>`,  // 双模：摘要+全文链接
-        // read_more_url 已内嵌到 content，无需独立字段
+        content: `${excerptText}<p><a href="${readMoreUrl}" class="read-more">阅读全文 →</a></p>`,
         seo_title: data.seo_title || data.title,
         seo_description: data.description || '',
-        seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k) => k.trim()) : []),
+        seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k: string) => k.trim()) : []),
         status: data.status || 'published',
         date: data.date || new Date().toISOString(),
       };
