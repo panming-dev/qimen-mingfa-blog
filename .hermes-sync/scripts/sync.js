@@ -152,7 +152,7 @@ export async function syncPosts() {
         seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k) => k.trim()) : []),
         status: data.status || 'published',
         date: data.date || new Date().toISOString(),
-        author: 1,  // 默认管理员
+        author: defaultAuthorId,  // 动态获取的第一个用户
       };
 
       if (existing.data && existing.data.length > 0) {
