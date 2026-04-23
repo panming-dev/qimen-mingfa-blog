@@ -1,6 +1,0 @@
-{{- $title := .Title -}}
-{{- if .IsHome }}{{ $title = .Site.Title }}{{ end -}}
-<title>{{ $title }}</title>
-{{- with .Description }}<meta name="description" content="{{ . }}">{{ end -}}
-{{- with .Keywords }}<meta name="keywords" content="{{ delimit . ", " }}">{{ end -}}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/adityatelange/hugo-PaperMod@master/static/css/papermod.css">

@@ -7,6 +7,15 @@ theme = 'PaperMod'
 [permalinks]
   posts = "/posts/:slug/"
 
+
+[taxonomy]
+  category = "categories"
+  tag = "tags"
+
+  # 分类 slug 映射（中文→英文）
+  [[taxonomy.category.slugs]]
+    name = "奇门"
+    slug = "qimen"
 [params]
   disableInlineCSS = true
   customCSS = ["https://cdn.jsdelivr.net/gh/adityatelange/hugo-PaperMod@master/static/css/papermod.css"]
