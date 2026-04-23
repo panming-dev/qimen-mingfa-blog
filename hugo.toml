@@ -13,13 +13,6 @@ theme = 'PaperMod'
 
 
 
-[taxonomy]
-  [taxonomy.categories]
-  [taxonomy.tags]
-
-  [[taxonomy.categories.slugs]]
-    name = "奇门"
-    slug = "qimen"
 
 [params]
   disableInlineCSS = true
@@ -57,6 +50,14 @@ theme = 'PaperMod'
     weight = 4
 
 
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+  series = "series"
+
+  [[taxonomies.category.slugs]]
+    name = "奇门"
+    slug = "qimen"
 [outputs]
   home = ["HTML"]
   section = ["HTML"]
