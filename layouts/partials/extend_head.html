@@ -2,7 +2,7 @@
 {{- $canonical := .Permalink | replace (site.BaseURL) "https://mingfa.site/" }}
 <link rel="canonical" href="{{ $canonical }}">
 
-{{- /* Banner hint for dual-mode layout */ -}}
+{{- /* Dual-mode layout banner styles */ -}}
 {{- if and hugo.IsProduction (not .IsHome) }}
 <style>
   .canonical-banner {
