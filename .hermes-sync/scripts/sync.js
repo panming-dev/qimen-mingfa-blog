@@ -97,6 +97,20 @@ async function fetchJSON(url, options = {}) {
  * Main sync function
  */
 export async function syncPosts() {
+  // 获取默认作者 ID
+  let defaultAuthorId = null;
+  try {
+    const users = await fetchJSON(`${DIRECTUS_URL}/items/directus_users?limit=1`);
+    if (users.data && users.data.length > 0) {
+      defaultAuthorId = users.data[0].id;
+      console.log(`✅ Using author ID: ${defaultAuthorId}`);
+    } else {
+      console.warn('⚠️ No users found in Directus, author will be omitted');
+    }
+  } catch (err) {
+    console.error('❌ Failed to fetch author:', err.message);
+  }
+
   const postsDir = join(__dirname, '..', '..', 'content', 'posts');  // Hugo source posts
   console.log(`📁 Scanning: ${postsDir}`);
 
@@ -144,6 +158,7 @@ export async function syncPosts() {
       const payload = {
         title: data.title || 'Untitled',
         slug,
+        author: defaultAuthorId,
         excerpt,
         content: `${excerpt}<p><a href="https://panma.site/posts/${slug}" class="read-more">阅读全文 →</a></p>`,  // 双模：摘要+全文链接
         // read_more_url 已内嵌到 content，无需独立字段
