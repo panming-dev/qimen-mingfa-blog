@@ -69,7 +69,6 @@ jobs:
         with:
           artifact_name: github-pages
           timeout: 60s
-      - name: Verify Artifact Content
         if: always()
         run: |
           echo "=== Deploy completed ==="
