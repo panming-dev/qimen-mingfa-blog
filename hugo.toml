@@ -3,11 +3,14 @@ languageCode = 'zh-cn'
 title = '奇门鸣法·磐鸣'
 theme = 'PaperMod'
 
+# URL 生成策略：文章使用 filename (01-xxx.html) 并强制 .html 后缀
+[permalinks]
+  posts = "/posts/:filename.html"
+
 [params]
   disableInlineCSS = true
   customCSS = ["https://cdn.jsdelivr.net/gh/adityatelange/hugo-PaperMod@master/static/css/papermod.css"]
-disableAssets = false
-
+  disableAssets = false
   defaultTheme = "auto"
   disableThemeToggle = false
   ShowShareButtons = true
@@ -31,7 +34,7 @@ disableAssets = false
   [[menu.main]]
     identifier = "categories"
     name = "分类"
-    url = "/categories/index.html"
+    url = "/categories/"
     weight = 3
   [[menu.main]]
     identifier = "tags"
@@ -54,9 +57,3 @@ canonifyURLs = true
 
 [assets]
   disableHLJS = true
-
-[[params.assets]]
-  disableHLJS = true
-
-# 使用 CDN 加载 PaperMod CSS
-customCSS = ["https://cdn.jsdelivr.net/gh/adityatelange/hugo-PaperMod@master/static/css/papermod.css"]
