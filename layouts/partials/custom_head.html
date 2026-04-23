@@ -1,3 +1,4 @@
-{{- /* Minimal head with CDN only */ -}}
-<title>{{ .Title }}</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/adityatelange/hugo-PaperMod@master/static/css/papermod.css" />
+{{- /* Additional head content for dual-mode */ -}}
+{{- if and hugo.IsProduction (not .IsHome) }}
+{{ .Site.Params.custom_head | safeHTML }}
+{{- end }}
