@@ -1,6 +1,6 @@
 {{- define "main" }}
 
-{{- if and hugo.IsProduction (not .IsHome) }}
+{{- /* 临时：强制显示 */ }}
 <div class="canonical-banner">
   📖 原文与互动版请访问 <a href="https://panma.site{{ .RelPermalink }}" target="_blank" rel="noopener">panma.site{{ .RelPermalink }}</a>
 </div>
@@ -68,4 +68,4 @@
   {{- end }}
 </article>
 
-{{- end }}{{/* end main */}}
+{{- end }}{{/* end main (forced) */}}
