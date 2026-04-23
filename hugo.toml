@@ -17,8 +17,8 @@ theme = 'PaperMod'
 
 
 [taxonomies]
-  category = "categories"
-  tag = "tags"
+  categories = "categories"
+  tags = "tags"
   series = "series"
 [params]
   disableInlineCSS = true
