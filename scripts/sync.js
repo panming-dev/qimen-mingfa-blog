@@ -136,7 +136,8 @@ export async function syncPosts() {
         defaultCategoryId = newCat.data.id;
         console.log(`[INFO] Created category: 奇门 (${defaultCategoryId})`);
       }
-    } catch (err) {
+    }  // close if (!defaultCategoryId) for strategy 2
+  } catch (err) {
       console.error('[ERROR] Failed to get/create category:', err.message);
       // 如果失败，使用一个占位符（会导致错误）
       defaultCategoryId = '00000000-0000-0000-0000-000000000000';
