@@ -97,7 +97,91 @@ async function fetchJSON(url, options = {}) {
  * Main sync function
  */
 export async function syncPosts() {
+  // 获取默认作者 ID
+  const postsDir = join(__dirname, '..', '..', 'content', 'posts');  // Hugo source posts
+  console.log(`📁 Scanning: ${postsDir}`);
+
+  if (!fs.existsSync(postsDir)) {
+    console.error('❌ Posts directory not found:', postsDir);
+    console.log('   Create a "content/posts" folder with your .md files');
+    process.exit(1);
   }
+
+  const files = fs.readdirSync(postsDir).filter(f => f.endsWith('.md'));
+  console.log(`📝 Found ${files.length} markdown files`);
+
+  let created = 0;
+  let updated = 0;
+  let failed = 0;
+
+  for (const file of files) {
+    const filePath = join(postsDir, file);
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const { data, content: body } = matter(content);
+
+    console.log(`[DEBUG] data.slug type: ${typeof data.slug}, value: ${data.slug}`);
+    console.log(`[DEBUG] data.title: ${data.title}`);
+    // 优先使用 frontmatter slug；如果包含中文字符则使用文件名（避免解析错误）
+    const baseName = file.replace('.md', '');
+    let slug = data.slug;
+    if (!slug || /[\u4e00-\u9fa5]/.test(slug)) {
+      slug = baseName;
+    }
+    console.log(`[DEBUG] baseName: ${baseName}, using slug: ${slug}`);
+
+
+
+    try {
+    console.log(`[INFO] Processing file: ${file}`);
+    console.log(`[INFO]   title: ${data.title}`);
+    console.log(`[INFO]   frontmatter.slug: ${data.slug}`);
+    console.log(`[INFO]   resolved slug: ${slug}`);
+      // Check if post exists
+      const existing = await fetchJSON(
+        `${DIRECTUS_URL}/items/blog_posts?filter[slug][_eq]=${encodeURIComponent(slug)}&limit=1`
+      );
+
+      const excerpt = generateExcerpt(body, 300);
+      const payload = {
+        title: data.title || 'Untitled',
+        slug,
+        excerpt,
+        content: `${excerpt}<p><a href="https://panma.site/posts/${slug}" class="read-more">阅读全文 →</a></p>`,  // 双模：摘要+全文链接
+        // read_more_url 已内嵌到 content，无需独立字段
+        seo_title: data.seo_title || data.title,
+        seo_description: data.description || '',
+        seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k) => k.trim()) : []),
+        status: data.status || 'published',
+        date: data.date || new Date().toISOString(),
+      };
+
+      if (existing.data && existing.data.length > 0) {
+        const postId = existing.data[0].id;
+        await fetchJSON(`${DIRECTUS_URL}/items/blog_posts/${postId}`, {
+          method: 'PATCH',
+          body: JSON.stringify(payload),
+        });
+        console.log(`✅ Updated: ${slug}`);
+        updated++;
+      } else {
+        const result = await fetchJSON(`${DIRECTUS_URL}/items/blog_posts`, {
+          method: 'POST',
+          body: JSON.stringify(payload),
+        });
+        console.log(`✅ Created: ${slug} (id: ${result.data.id})`);
+        created++;
+      }
+    } catch (err) {
+      console.error(`❌ Failed: ${slug} — ${err.message}`);
+      failed++;
+    }
+  }
+
+  console.log('\n📊 Sync complete:');
+  console.log(`   Created: ${created}`);
+  console.log(`   Updated: ${updated}`);
+  console.log(`   Failed:  ${failed}`);
+}
 
 syncPosts().catch(err => {
   console.error('Fatal error:', err);
