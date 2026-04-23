@@ -1,20 +1,7 @@
-<!DOCTYPE html>
-<html lang="{{ .Site.LanguageCode | default "en" }}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {{ if .IsHome }}
-    <title>{{ .Site.Title }}</title>
-    {{ else }}
-    <title>{{ .Title }} - {{ .Site.Title }}</title>
-    {{ end }}
-    {{ with .Description }}
-    <meta name="description" content="{{ . }}">
-    {{ end }}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/papermod@2.6.1/dist/css/papermod.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/papermod@2.6.1/dist/css/custom.css">
-    <style>
-        :root {{- /* PaperMod CSS variables (minimal) */ -}} {}
-    </style>
-</head>
-<body>
+{{- $title := .Title }}
+{{- if .IsHome }}{{ $title = .Site.Title }}{{ end }}
+<title>{{ $title }}</title>
+{{ with .Description }}<meta name="description" content="{{ . }}">{{ end }}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/papermod@2.6.1/dist/css/papermod.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/papermod@2.6.1/dist/css/custom.css">
