@@ -1,0 +1,31 @@
+{{- $normalize := resources.Get "css/normalize.css" -}}
+{{- $papermod := resources.Get "css/papermod.css" -}}
+{{- $theme_vars := resources.Get "css/theme-vars.css" -}}
+
+{{- $options := (dict "targetPath" "css/style.css" "outputStyle" "compressed" "enableSourceMap" true) -}}
+{{- $normalize | resources.Minify | resources.Fingerprint $options | resources.PostProcess -}}
+{{- $papermod | resources.Minify | resources.Fingerprint $options | resources.PostProcess -}}
+{{- $theme_vars | resources.Minify | resources.Fingerprint $options | resources.PostProcess -}}
+
+{{- if not $normalize -}}
+  {{- warnf "Could not find normalize.css" -}}
+{{- end -}}
+{{- if not $papermod -}}
+  {{- warnf "Could not find papermod.css" -}}
+{{- end -}}
+{{- if not $theme_vars -}}
+  {{- warnf "Could not find theme-vars.css" -}}
+{{- end -}}
+
+{{- /* Fallback to CDN if local resources missing */ -}}
+{{- if or (not $normalize) (or (not $papermod) (not $theme_vars)) }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/adityatelange/hugo-PaperMod@master/static/css/normalize.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/adityatelange/hugo-PaperMod@master/static/css/papermod.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/adityatelange/hugo-PaperMod@master/static/css/theme-vars.css">
+{{- else }}
+<link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
+{{- end }}
+
+{{- partial "templates/opengraph.html" . -}}
+{{- partial "templates/twitter_cards.html" . -}}
+{{- partial "templates/schema_json.html" . -}}
