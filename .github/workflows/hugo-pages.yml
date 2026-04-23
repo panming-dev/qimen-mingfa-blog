@@ -1,9 +1,14 @@
-name: Deploy Hugo to GitHub Pages
+name: Deploy Hugo site to Pages
 
 on:
   push:
-    branches: [master]
-  workflow_dispatch: {}
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build:
@@ -13,18 +18,17 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          # cache disabled
-      
+
       - name: Install Hugo
         run: |
           npm install -g hugo-extended@0.160.1
           hugo version
-      
+
       - name: Show config
         run: |
           echo "=== hugo.toml ==="
@@ -32,15 +36,15 @@ jobs:
           echo ""
           echo "=== Menus ==="
           grep -A10 'menu' hugo.toml || true
-      
+
       - name: Clean cache
         run: rm -rf resources/_gen/ public/
-      
+
       - name: Build site
         run: |
           set -x
-hugo --minify --ignoreCache --logLevel debug --printPathWarnings
-      
+          hugo --minify --ignoreCache --logLevel debug --printPathWarnings
+
       - name: Debug generated head
         run: |
           echo "=== index.html head ==="
@@ -57,6 +61,7 @@ hugo --minify --ignoreCache --logLevel debug --printPathWarnings
           else
             echo "post not found"
           fi
+
       - name: Check output
         run: |
           echo "=== Public structure ==="
@@ -67,7 +72,7 @@ hugo --minify --ignoreCache --logLevel debug --printPathWarnings
           echo ""
           echo "=== Head of article ==="
           head -50 public/posts/basics/$(ls public/posts/basics/ 2>/dev/null | head -1) 2>/dev/null || echo "No article file"
-      
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
