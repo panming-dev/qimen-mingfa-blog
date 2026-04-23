@@ -104,6 +104,14 @@ export async function syncPosts() {
   // 确保 "奇门" 分类存在，获取其 UUID
   let defaultCategoryId = process.env.DEFAULT_CATEGORY_ID;
   console.log('[DEBUG] DEFAULT_CATEGORY_ID env:', process.env.DEFAULT_CATEGORY_ID);
+  
+  // 硬编码兜底：如果 env 未设置或无效，使用已知的"奇门"分类 UUID
+  const FALLBACK_CATEGORY_ID = '4e0321d7-fdaf-4220-858b-ccad4b6d4908';
+  if (!defaultCategoryId || defaultCategoryId === '00000000-0000-0000-0000-000000000000') {
+    defaultCategoryId = FALLBACK_CATEGORY_ID;
+    console.log('[INFO] Using fallback category UUID:', FALLBACK_CATEGORY_ID);
+  }
+  
   if (!defaultCategoryId) {
     try {
       // 策略1: 从已有 blog_posts 推断 category UUID（无需 categories 权限）
