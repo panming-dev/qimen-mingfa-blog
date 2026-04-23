@@ -2,7 +2,8 @@ name: Deploy Hugo to Pages
 on:
   push:
     branches: [master]
-  workflow_dispatch: {}
+  workflow_dispatch:
+    # Allow manual trigger
 permissions:
   contents: read
   pages: write
@@ -21,7 +22,7 @@ jobs:
           node-version: '20'
       - name: Install Hugo
         run: npm install -g hugo-extended
-            - name: Debug Hugo Config
+      - name: Debug Hugo Config
         run: |
           echo "=== hugo.toml ==="
           cat hugo.toml
@@ -34,7 +35,8 @@ jobs:
           echo "=== Hugo Version ==="
           hugo version
           echo "=== Hugo Config Dump ==="
-          hugo config- name: Build
+          hugo config
+      - name: Build
         run: hugo --minify --theme PaperMod --noCache
       - name: Setup Pages
         uses: actions/configure-pages@v4
