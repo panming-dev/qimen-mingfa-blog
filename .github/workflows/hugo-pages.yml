@@ -75,7 +75,7 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          artifact_name: github-pages
+          artifact: github-pages
           timeout: 60s
         if: always()
         run: |

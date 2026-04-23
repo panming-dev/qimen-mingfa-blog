@@ -39,4 +39,11 @@ theme = 'PaperMod'
   category = "categories"
   tag = "tags"
   series = "series"
+
+[outputs]
+  home = ["HTML"]
+  section = ["HTML"]
+  taxonomy = ["HTML"]
+  term = ["HTML"]
+
 canonifyURLs = true
