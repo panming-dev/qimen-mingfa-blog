@@ -1,14 +1,9 @@
-name: Deploy Hugo to Pages
+name: Deploy Hugo to GitHub Pages
 
 on:
   push:
     branches: [master]
   workflow_dispatch: {}
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
 
 jobs:
   build:
@@ -17,27 +12,19 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
+      
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
           hugo-version: '0.160.1'
           extended: true
-
-      - name: Clean Hugo cache
-        run: rm -rf resources/ public/ || true
-
+      
       - name: Build
-        run: hugo --minify --ignoreCache --ignoreCache
-
-      - name: Debug head output
         run: |
-          echo "=== index.html head ==="
-          sed -n '1,50p' public/index.html | grep -A5 '<head' || true
-          echo ""
-          echo "=== Article page head ==="
-          find public -name "*.html" -path "*/posts/*" | head -1 | xargs -I{} sh -c 'echo "File: {}"; head -50 {} | grep -A5 "<head" || true'
-
+          hugo --minify --ignoreCache
+          echo "=== Built files ==="
+          find public -type f | sort
+      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -46,11 +33,6 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - name: Deploy
         uses: actions/deploy-pages@v4
