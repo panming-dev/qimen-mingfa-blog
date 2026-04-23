@@ -1,0 +1,17 @@
+name: List Directus Posts
+on:
+  workflow_dispatch:
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: List all post slugs in Directus
+        env:
+          DIRECTUS_URL: ${{ secrets.DIRECTUS_URL }}
+          DIRECTUS_TOKEN: ${{ secrets.DIRECTUS_TOKEN }}
+        run: |
+          echo "查询 Directus 文章列表..."
+          curl -s -H "Authorization: Bearer $DIRECTUS_TOKEN" "$DIRECTUS_URL/items/blog_posts?limit=100&fields=id,slug,title,status" | jq -r '.data[] | "\(.id) | \(.slug) | \(.title) | \(.status)"' | sort
+          echo "=== 查询包含 '452' 或 '4-5-2' 的文章 ==="
+          curl -s -H "Authorization: Bearer $DIRECTUS_TOKEN" "$DIRECTUS_URL/items/blog_posts?filter[slug][_like]=%%4-5-2%%&limit=10" | jq .
