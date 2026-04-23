@@ -24,8 +24,19 @@ jobs:
           hugo-version: '0.160.1'
           extended: true
 
+      - name: Clean Hugo cache
+        run: rm -rf resources/ public/ || true
+
       - name: Build
-        run: hugo --minify --ignoreCache
+        run: hugo --minify --ignoreCache --ignoreCache
+
+      - name: Debug head output
+        run: |
+          echo "=== index.html head ==="
+          sed -n '1,50p' public/index.html | grep -A5 '<head' || true
+          echo ""
+          echo "=== Article page head ==="
+          find public -name "*.html" -path "*/posts/*" | head -1 | xargs -I{} sh -c 'echo "File: {}"; head -50 {} | grep -A5 "<head" || true'
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
