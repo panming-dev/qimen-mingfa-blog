@@ -172,7 +172,7 @@ export async function syncPosts() {
         title: data.title || 'Untitled',
         slug,
         author: 'e51ecbce-e34f-45d6-b863-030511108267',
-        category: 'e51ecbce-e34f-45d6-b863-030511108267',
+        category: defaultCategoryId,
         excerpt,
         content: `${excerpt}<p><a href="https://panma.site/posts/${slug}" class="read-more">阅读全文 →</a></p>`,  // 双模：摘要+全文链接
         // read_more_url 已内嵌到 content，无需独立字段
