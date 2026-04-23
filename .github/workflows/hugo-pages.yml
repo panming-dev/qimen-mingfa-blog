@@ -12,18 +12,46 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: true
       
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          hugo-version: '0.160.1'
-          extended: true
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
       
-      - name: Build
+      - name: Install Hugo
         run: |
-          hugo --minify --ignoreCache
-          echo "=== Built files ==="
+          npm install -g hugo-extended@0.160.1
+          hugo version
+      
+      - name: Show config
+        run: |
+          echo "=== hugo.toml ==="
+          cat hugo.toml | head -30
+          echo ""
+          echo "=== Menus ==="
+          grep -A10 'menu' hugo.toml || true
+      
+      - name: Clean cache
+        run: rm -rf resources/_gen/ public/
+      
+      - name: Build site
+        run: |
+          set -x
+          hugo --minify --ignoreCache --verbose
+      
+      - name: Check output
+        run: |
+          echo "=== Public structure ==="
           find public -type f | sort
+          echo ""
+          echo "=== Head of index.html ==="
+          head -50 public/index.html
+          echo ""
+          echo "=== Head of article ==="
+          head -50 public/posts/basics/$(ls public/posts/basics/ 2>/dev/null | head -1) 2>/dev/null || echo "No article file"
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -33,6 +61,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - name: Deploy
         uses: actions/deploy-pages@v4
