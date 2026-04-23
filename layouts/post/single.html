@@ -1,9 +1,8 @@
 {{- define "main" }}
 
 <div class="canonical-banner">
-  📖 原文与互动版请访问 <a href="{{ site.Params.canonicalURL }}/posts/{{ .Slug }}" target="_blank" rel="noopener">panma.site/posts/{{ .Slug }}</a>
+  📖 原文与互动版请访问 <a href="{{ site.Params.canonicalURL }}/posts/{{ .File.BaseFileName }}" target="_blank" rel="noopener">panma.site/posts/{{ .File.BaseFileName }}</a>
 </div>
-
 
 <article class="post-single">
   <header class="post-header">
