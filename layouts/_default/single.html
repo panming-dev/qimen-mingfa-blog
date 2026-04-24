@@ -4,7 +4,8 @@
   {{- if site.Params.canonicalURL }}
     {{- $base := site.Params.canonicalURL }}
     {{- $base = trim $base "/" }}
-    {{- $url := printf "%s%s" $base .RelPermalink }}
+    {{- $path := strings.TrimPrefix "/qimen-mingfa-blog" .RelPermalink }}
+    {{- $url := printf "%s%s" $base $path }}
   📖 原文与互动版请访问 <a href="{{ $url }}" target="_blank" rel="noopener">{{ $url }}</a>
   {{- else }}
   📖 原文与互动版请访问 <a href="{{ .Permalink }}" target="_blank" rel="noopener">{{ .Permalink }}</a>

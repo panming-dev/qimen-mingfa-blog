@@ -25,7 +25,9 @@
 {{- if site.Params.canonicalURL -}}
   {{- $base := site.Params.canonicalURL -}}
   {{- $base = trim $base "/" -}}
-  {{- $canonical := printf "%s%s" $base .RelPermalink -}}
+  {{- /* Strip baseURL subdirectory from .RelPermalink to get clean /blog/slug/ path */ -}}
+  {{- $path := strings.TrimPrefix "/qimen-mingfa-blog" .RelPermalink -}}
+  {{- $canonical := printf "%s%s" $base $path -}}
   <link rel="canonical" href="{{ $canonical }}">
 {{- else -}}
   <link rel="canonical" href="{{ .Permalink }}">
