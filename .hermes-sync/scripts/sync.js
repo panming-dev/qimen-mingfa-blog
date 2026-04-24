@@ -239,7 +239,7 @@ export async function syncPosts() {
       );
 
       const excerpt = generateExcerpt(body, 300);
-      const postUrl = `${CANONICAL_URL}/blog/${slug}/`;  // Trailing slash per Hugo permalinks
+      const postUrl = `${CANONICAL_URL}/posts/${slug}/`;  // Trailing slash per Hugo permalinks
       const payload = {
         title: data.title || 'Untitled',
         slug,
