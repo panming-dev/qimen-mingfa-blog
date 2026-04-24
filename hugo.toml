@@ -12,7 +12,7 @@ theme = 'PaperMod'
   tags = "tags"
   series = "series"
 [params]
-  canonicalURL = "https://panma.site"
+  canonicalURL = "https://panma.site/blog"
   disableInlineCSS = true
   customCSS = []
   disableAssets = false
@@ -53,7 +53,11 @@ theme = 'PaperMod'
   taxonomy = ["HTML"]
   term = ["HTML"]
 
-canonifyURLs = true
+# LLMS.txt output format for AI crawlers
+[outputFormats.llms]
+  mediaType = "text/plain"
+  baseName = "llms"
+  isPlainText = true
 
 [assets]
   disableHLJS = true
