@@ -47,10 +47,12 @@
   {{- end }}
 
   {{- if .Content }}
+  {{- /* Replace panma.site hardcoded links with GitHub Pages URL */}}
+  {{- $content := replace .Content "https://panma.site/blog/" "https://panming-dev.github.io/qimen-mingfa-blog/blog/" }}
   <div class="post-content md-content">
     {{- if not (.Param "disableAnchoredHeadings") }}
-    {{- partial "anchored_headings.html" .Content -}}
-    {{- else }}{{ .Content }}{{ end }}
+    {{- partial "anchored_headings.html" $content -}}
+    {{- else }}{{ $content }}{{ end }}
   </div>
   {{- end }}
 
