@@ -9,12 +9,11 @@ allow: /categories/
 allow: /tags/
 
 # Article index (for semantic discovery)
-# Format: title, url, word count
+# Format: title, url
 
 {{- $pages := where .Site.RegularPages "Type" "posts" }}
 {{- $pages := where $pages "Params.draft" "!=" true }}
 {{- range $pages }}
 - title: {{ .Title }}
   url: {{ .RelPermalink }}
-  words: {{ len (words .Content) }}
 {{- end }}
