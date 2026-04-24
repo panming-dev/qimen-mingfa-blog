@@ -23,7 +23,7 @@
     {{- with site.Params.description }}{{ . }}{{- end }}{{- end }}{{- end -}}">
 <meta name="author" content="{{ (partial "author.html" . ) }}">
 {{- $base := site.Params.canonicalURL | default "https://panma.site" -}}
-{{- $base = strings.TrimSuffix $base "/" -}}
+{{- $base = trim $base "/" -}}
 {{- $canonical := printf "%s%s" $base .RelPermalink -}}
 <link rel="canonical" href="{{ $canonical }}">
 {{- if site.Params.analytics.google.SiteVerificationTag }}
