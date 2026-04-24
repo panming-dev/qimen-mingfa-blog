@@ -28,10 +28,44 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const DIRECTUS_URL = process.env.DIRECTUS_URL?.replace(/\/$/, '');
-const DIRECTUS_TOKEN = process.env.DIRECTUS_TOKEN;
+let DIRECTUS_TOKEN = process.env.DIRECTUS_TOKEN;
+
+// If no token provided, try to authenticate with email/password
+if (!DIRECTUS_TOKEN && process.env.DIRECTUS_EMAIL && process.env.DIRECTUS_PASSWORD) {
+  console.log('[INFO] No DIRECTUS_TOKEN found, attempting to authenticate with email/password...');
+  try {
+    const authResp = await fetch(`${DIRECTUS_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: process.env.DIRECTUS_EMAIL,
+        password: process.env.DIRECTUS_PASSWORD,
+      }),
+    });
+    console.log('[DEBUG] Auth response status:', authResp.status, authResp.statusText);
+    if (authResp.ok) {
+      const authData = await authResp.json();
+      console.log('[DEBUG] Auth response data keys:', Object.keys(authData.data || {}));
+      DIRECTUS_TOKEN = authData.data?.access_token;
+      if (DIRECTUS_TOKEN) {
+        console.log('[INFO] Successfully authenticated with Directus');
+      } else {
+        console.warn('[WARN] No access_token in response');
+      }
+    } else {
+      const errText = await authResp.text();
+      console.warn('[WARN] Auth failed:', errText.substring(0, 200));
+    }
+  } catch (e) {
+    console.warn('[WARN] Failed to authenticate:', e.message);
+  }
+}
 
 if (!DIRECTUS_URL || !DIRECTUS_TOKEN) {
   console.error('❌ Missing DIRECTUS_URL or DIRECTUS_TOKEN environment variables');
+  console.error('   Provide either:');
+  console.error('   - DIRECTUS_TOKEN=<your-access-token>');
+  console.error('   - Or set DIRECTUS_EMAIL and DIRECTUS_PASSWORD for login');
   process.exit(1);
 }
 
