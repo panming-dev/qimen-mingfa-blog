@@ -22,10 +22,16 @@
     {{- .Summary | default (printf "%s - %s" .Title  site.Title) }}{{- else }}
     {{- with site.Params.description }}{{ . }}{{- end }}{{- end }}{{- end -}}">
 <meta name="author" content="{{ (partial "author.html" . ) }}">
-{{- $base := site.Params.canonicalURL | default "https://panma.site" -}}
-{{- $base = trim $base "/" -}}
-{{- $canonical := printf "%s%s" $base .RelPermalink -}}
-<link rel="canonical" href="{{ $canonical }}">
+{{- if site.Params.canonicalURL -}}
+  {{- $base := site.Params.canonicalURL -}}
+  {{- if hasSuffix $base "/" -}}
+    {{- $base = $base | trimSuffix "/" -}}
+  {{- end -}}
+  {{- $canonical := printf "%s%s" $base .RelPermalink -}}
+  <link rel="canonical" href="{{ $canonical }}">
+{{- else -}}
+  <link rel="canonical" href="{{ .Permalink }}">
+{{- end -}}
 {{- if site.Params.analytics.google.SiteVerificationTag }}
 <meta name="google-site-verification" content="{{ site.Params.analytics.google.SiteVerificationTag }}">
 {{- end }}
