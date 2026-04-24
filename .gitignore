@@ -3,3 +3,5 @@
 .hermes-sync/.env.local
 .hermes-sync/content/
 .hermes-sync/scripts/sync.js.bak
+.hermes-sync/node_modules/
+.hermes-sync/package-lock.json
