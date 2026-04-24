@@ -1,7 +1,14 @@
 {{- define "main" }}
 
 <div class="canonical-banner">
-  📖 原文与互动版请访问 <a href="{{ site.Params.canonicalURL }}/blog/{{ .Slug }}/" target="_blank" rel="noopener">{{ site.Params.canonicalURL }}/blog/{{ .Slug }}/</a>
+  {{- if site.Params.canonicalURL }}
+    {{- $base := site.Params.canonicalURL }}
+    {{- $base = trim $base "/" }}
+    {{- $url := printf "%s%s" $base .RelPermalink }}
+  📖 原文与互动版请访问 <a href="{{ $url }}" target="_blank" rel="noopener">{{ $url }}</a>
+  {{- else }}
+  📖 原文与互动版请访问 <a href="{{ .Permalink }}" target="_blank" rel="noopener">{{ .Permalink }}</a>
+  {{- end }}
 </div>
 
 <article class="post-single">
