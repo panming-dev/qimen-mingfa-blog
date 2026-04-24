@@ -24,9 +24,7 @@
 <meta name="author" content="{{ (partial "author.html" . ) }}">
 {{- if site.Params.canonicalURL -}}
   {{- $base := site.Params.canonicalURL -}}
-  {{- if hasSuffix $base "/" -}}
-    {{- $base = $base | trimSuffix "/" -}}
-  {{- end -}}
+  {{- $base = trim $base "/" -}}
   {{- $canonical := printf "%s%s" $base .RelPermalink -}}
   <link rel="canonical" href="{{ $canonical }}">
 {{- else -}}
