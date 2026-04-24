@@ -1,0 +1,5 @@
+# Hermes sync - protect sensitive data
+.hermes-sync/.env
+.hermes-sync/.env.local
+.hermes-sync/content/
+.hermes-sync/scripts/sync.js.bak
