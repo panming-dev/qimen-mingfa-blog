@@ -211,7 +211,7 @@ export async function syncPosts() {
         ...( (defaultCategoryId && defaultCategoryId !== '00000000-0000-0000-0000-000000000000')
           ? { category: defaultCategoryId }
           : {}),
-        content: `${excerpt}<p><a href="https://panming-dev.github.io/qimen-mingfa-blog/posts/${slug}" class="read-more">阅读全文 →</a></p>`,  // 双模：摘要+全文链接
+        content: `${excerpt}<p><a href="https://panming-dev.github.io/qimen-mingfa-blog/blog/${slug}/" class="read-more">阅读全文 →</a></p>`,  // 双模：摘要+全文链接
         // read_more_url 已内嵌到 content，无需独立字段
         seo_title: data.seo_title || data.title,
         seo_description: data.description || '',
