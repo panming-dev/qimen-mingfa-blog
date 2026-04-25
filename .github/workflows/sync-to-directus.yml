@@ -16,7 +16,7 @@ jobs:
         run: |
           pwd
           ls -la
-          ls -la .hermes-sync/scripts/ 2>/dev/null || echo "No scripts dir"
+          ls -la scripts/ 2>/dev/null || echo "No scripts dir"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -28,12 +28,10 @@ jobs:
           npm config set registry https://registry.npmjs.org/
           npm cache clean --force
           npm install --no-audit --no-fund
-        working-directory: ${{ github.workspace }}/.hermes-sync
 
       - name: Sync Posts to Directus
         env:
           DIRECTUS_URL: ${{ secrets.DIRECTUS_URL }}
           DIRECTUS_TOKEN: ${{ secrets.DIRECTUS_TOKEN }}
           CANONICAL_URL: ${{ secrets.CANONICAL_URL }}
-        run: node scripts/sync.js
-        working-directory: ${{ github.workspace }}/.hermes-sync
+        run: npm run sync
