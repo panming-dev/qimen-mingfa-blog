@@ -243,7 +243,8 @@ export async function syncPosts() {
         seo_description: data.description || '',
         seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k) => k.trim()) : []),
         status: data.status || 'published',
-        date: data.date || new Date().toISOString(),
+        // Directus blog_posts 使用 published_at 字段，不使用 date
+        published_at: data.date || new Date().toISOString(),
       };
       console.log('[DEBUG] Payload category field:', JSON.stringify(payload.category));
       console.log('[DEBUG] defaultCategoryId at payload time:', JSON.stringify(defaultCategoryId));
