@@ -1,5 +1,41 @@
 ---
-title: "第六章 第六章"
-categories: ["奇门"]
-slug: di-liu-zhang-di-liu-zhang
+{
+  "title": "第六章：鸣法格局——如何识别与运用奇门特殊格局",
+  "description": "奇门遁甲鸣法格局详解：常见特殊格局（如飞鸟跌穴、回首破穴等）的识别条件、吉凶判断与实战运用。",
+  "keywords": [
+    "奇门遁甲",
+    "鸣法格局",
+    "特殊格局",
+    "飞鸟跌穴",
+    "回首破穴",
+    "格局判断"
+  ],
+  "slug": "di-liu-zhang-di-liu-zhang",
+  "author": "磐鸣",
+  "date": "2024-01-15",
+  "categories": [
+    "奇门遁甲"
+  ],
+  "tags": [
+    "奇门遁甲",
+    "奇门遁甲",
+    "鸣法格局"
+  ],
+  "draft": false,
+  "seo_title": "第六章：鸣法格局——如何识别与运用奇门特殊格局",
+  "seo_description": "奇门遁甲鸣法格局详解：常见特殊格局（如飞鸟跌穴、回首破穴等）的识别条件、吉凶判断与实战运用。",
+  "seo_keywords": [
+    "奇门遁甲",
+    "鸣法格局",
+    "特殊格局",
+    "飞鸟跌穴",
+    "回首破穴",
+    "格局判断"
+  ]
+}
 ---
+
+（本文内容正在整理中，完整文章将在后续版本发布。）
+
+---
+**本文首发于** [奇门鸣法·磐鸣](https://panming-dev.github.io/qimen-mingfa-blog/blog/di-liu-zhang-di-liu-zhang/) | **转载请注明出处

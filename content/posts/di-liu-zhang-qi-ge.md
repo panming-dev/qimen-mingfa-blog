@@ -1,7 +1,41 @@
 ---
-title: "第六章 奇格"
-categories: ["奇门"]
-slug: di-liu-zhang-qi-ge
+{
+  "title": "第六章：奇格——奇门遁甲的特殊格局",
+  "description": "奇门遁甲奇格详解：乙丙丁三奇入墓、朱雀升宫、白虎投江等特殊格局的象意、条件与实战应用。",
+  "keywords": [
+    "奇门遁甲",
+    "奇格",
+    "三奇",
+    "特殊格局",
+    "乙丙丁",
+    "实战应用"
+  ],
+  "slug": "di-liu-zhang-qi-ge",
+  "author": "磐鸣",
+  "date": "2024-01-15",
+  "categories": [
+    "奇门遁甲"
+  ],
+  "tags": [
+    "奇门遁甲",
+    "奇门遁甲",
+    "奇格"
+  ],
+  "draft": false,
+  "seo_title": "第六章：奇格——奇门遁甲的特殊格局",
+  "seo_description": "奇门遁甲奇格详解：乙丙丁三奇入墓、朱雀升宫、白虎投江等特殊格局的象意、条件与实战应用。",
+  "seo_keywords": [
+    "奇门遁甲",
+    "奇格",
+    "三奇",
+    "特殊格局",
+    "乙丙丁",
+    "实战应用"
+  ]
+}
 ---
 
-<p><a href="https://panming-dev.github.io/qimen-mingfa-blog/blog/di-liu-zhang-qi-ge/" class="read-more">阅读全文 →</a></p>
+（本文内容正在整理中，完整文章将在后续版本发布。）
+
+---
+**本文首发于** [奇门鸣法·磐鸣](https://panming-dev.github.io/qimen-mingfa-blog/blog/di-liu-zhang-qi-ge/) | **转载请注明出处

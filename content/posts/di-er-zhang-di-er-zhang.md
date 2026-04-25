@@ -1,5 +1,41 @@
 ---
-title: "第二章 第二章"
-categories: ["奇门"]
-slug: di-er-zhang-di-er-zhang
+{
+  "title": "第二章：飞盘起局——从零排出一张奇门盘",
+  "description": "奇门遁甲飞盘起局完整教程：节气、旬首、值符值使、飞布规则，一步步教你排出自己的第一张奇门盘。",
+  "keywords": [
+    "奇门遁甲",
+    "飞盘起局",
+    "排盘",
+    "值符值使",
+    "节气",
+    "遁甲"
+  ],
+  "slug": "di-er-zhang-di-er-zhang",
+  "author": "磐鸣",
+  "date": "2024-01-15",
+  "categories": [
+    "奇门遁甲"
+  ],
+  "tags": [
+    "奇门遁甲",
+    "奇门遁甲",
+    "飞盘起局"
+  ],
+  "draft": false,
+  "seo_title": "第二章：飞盘起局——从零排出一张奇门盘",
+  "seo_description": "奇门遁甲飞盘起局完整教程：节气、旬首、值符值使、飞布规则，一步步教你排出自己的第一张奇门盘。",
+  "seo_keywords": [
+    "奇门遁甲",
+    "飞盘起局",
+    "排盘",
+    "值符值使",
+    "节气",
+    "遁甲"
+  ]
+}
 ---
+
+（本文内容正在整理中，完整文章将在后续版本发布。）
+
+---
+**本文首发于** [奇门鸣法·磐鸣](https://panming-dev.github.io/qimen-mingfa-blog/blog/di-er-zhang-di-er-zhang/) | **转载请注明出处
