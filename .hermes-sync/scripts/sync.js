@@ -257,7 +257,7 @@ export async function syncPosts() {
         seo_description: data.description || '',
         seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k) => k.trim()) : []),
         status: data.status || 'published',
-        date: data.date || new Date().toISOString(),
+        published_at: data.date || new Date().toISOString(),
       };
       console.log('[DEBUG] Payload category field:', JSON.stringify(payload.category));
       console.log('[DEBUG] defaultCategoryId at payload time:', JSON.stringify(defaultCategoryId));
