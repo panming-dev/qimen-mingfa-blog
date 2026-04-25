@@ -69,9 +69,13 @@ if (!DIRECTUS_URL || !DIRECTUS_TOKEN) {
   process.exit(1);
 }
 
-// Canonical URL for the blog (used for absolute links in Directus content)
-// Should match hugo.toml: canonicalURL
+// Canonical URL for the blog (used for canonical banner in single.html)
+// Should match hugo.toml: canonicalURL = "https://panma.site"
 const CANONICAL_URL = process.env.CANONICAL_URL?.replace(/\/$/, '') || 'https://panma.site';
+
+// GitHub Pages URL for the blog (used for "阅读全文" links in Directus content)
+// This is the deployed site on GitHub Pages
+const GITHUB_PAGES_URL = 'https://panming-dev.github.io/qimen-mingfa-blog';
 
 /**
  * Generate slug from Chinese title using pinyin
@@ -239,7 +243,7 @@ export async function syncPosts() {
       );
 
       const excerpt = generateExcerpt(body, 300);
-      const postUrl = `${CANONICAL_URL}/blog/${slug}/`;  // Trailing slash per Hugo permalinks
+      const postUrl = `${GITHUB_PAGES_URL}/blog/${slug}/`;  // Trailing slash per Hugo permalinks
       const payload = {
         title: data.title || 'Untitled',
         slug,
