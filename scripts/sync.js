@@ -157,12 +157,38 @@ export async function syncPosts() {
 
   // 获取默认作者 ID
 
-  const postsDir = join(__dirname, '..', '..', 'content', 'posts');  // Hugo source posts
+  // 定位 content/posts 目录（兼容本地和 GitHub Actions）
+  function findPostsDir() {
+    const bases = [];
+
+    // 策略1：当前工作目录（npm run sync 时通常是项目根）
+    bases.push(process.cwd());
+
+    // 策略2：从脚本目录向上查找（最多3级）
+    let dir = __dirname;
+    for (let i = 0; i < 4; i++) {
+      bases.push(dir);
+      dir = join(dir, '..');
+    }
+
+    for (const base of bases) {
+      const candidate = join(base, 'content', 'posts');
+      console.log(`[DEBUG] Trying posts dir: ${candidate}`);
+      if (fs.existsSync(candidate)) {
+        return candidate;
+      }
+    }
+    return null;
+  }
+
+  const postsDir = findPostsDir();
   console.log(`📁 Scanning: ${postsDir}`);
 
-  if (!fs.existsSync(postsDir)) {
-    console.error('❌ Posts directory not found:', postsDir);
-    console.log('   Create a "content/posts" folder with your .md files');
+  if (!postsDir) {
+    console.error('❌ Posts directory not found.');
+    console.error('   Searched in: content/posts (relative to cwd and script location)');
+    console.error('   Current cwd:', process.cwd());
+    console.error('   __dirname:', __dirname);
     process.exit(1);
   }
 
