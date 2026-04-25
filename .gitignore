@@ -5,3 +5,7 @@
 .hermes-sync/scripts/sync.js.bak
 .hermes-sync/node_modules/
 .hermes-sync/package-lock.json
+
+# Node.js dependencies
+node_modules/
+package-lock.json
