@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemap 位置
+Sitemap: https://panma.site/sitemap.xml
+
+# 禁止抓取的路径（可选）
+# Disallow: /drafts/
+# Disallow: /admin/
