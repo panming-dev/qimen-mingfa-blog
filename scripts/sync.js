@@ -29,6 +29,10 @@ const __dirname = dirname(__filename);
 
 const DIRECTUS_URL = process.env.DIRECTUS_URL?.replace(/\/$/, '');
 const DIRECTUS_TOKEN = process.env.DIRECTUS_TOKEN;
+const CANONICAL_URL = (process.env.CANONICAL_URL || 'https://panma.site').replace(/\/$/, '');
+const SOURCE_URL = (process.env.SOURCE_URL || 'https://panming-dev.github.io/qimen-mingfa-blog').replace(/\/$/, '');
+const REVALIDATION_SECRET = process.env.REVALIDATION_SECRET;
+const INDEXNOW_WEBHOOK_SECRET = process.env.INDEXNOW_WEBHOOK_SECRET;
 
 if (!DIRECTUS_URL || !DIRECTUS_TOKEN) {
   console.error('❌ Missing DIRECTUS_URL or DIRECTUS_TOKEN environment variables');
@@ -95,6 +99,37 @@ async function fetchJSON(url, options = {}) {
   }
 
   return resp.json();
+}
+
+async function postWebhook(path, secretHeader, secret, body) {
+  if (!secret) {
+    console.warn(`[WARN] Skipping ${path}: webhook secret is not configured`);
+    return;
+  }
+
+  const response = await fetch(`${CANONICAL_URL}${path}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      [secretHeader]: secret,
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    throw new Error(`${path} returned HTTP ${response.status}: ${await response.text()}`);
+  }
+}
+
+async function notifyPublishedPosts(slugs) {
+  const paths = ['/blog/', '/sitemap.xml', ...slugs.map((slug) => `/blog/${slug}/`)];
+  for (const path of paths) {
+    await postWebhook('/api/revalidate', 'x-revalidate-secret', REVALIDATION_SECRET, { path });
+  }
+
+  await postWebhook('/api/indexnow', 'x-indexnow-secret', INDEXNOW_WEBHOOK_SECRET, {
+    urls: paths.map((path) => new URL(path, `${CANONICAL_URL}/`).toString()),
+  });
 }
 
 /**
@@ -198,6 +233,7 @@ export async function syncPosts() {
   let created = 0;
   let updated = 0;
   let failed = 0;
+  const syncedSlugs = [];
 
   for (const file of files) {
     const filePath = join(postsDir, file);
@@ -227,6 +263,7 @@ export async function syncPosts() {
       );
 
       const excerpt = generateExcerpt(body, 300);
+      const postStatus = data.draft ? 'draft' : (data.status || 'published');
       const payload = {
         title: data.title || 'Untitled',
         slug,
@@ -237,12 +274,12 @@ export async function syncPosts() {
         ...( (defaultCategoryId && defaultCategoryId !== '00000000-0000-0000-0000-000000000000')
           ? { category: defaultCategoryId }
           : {}),
-        content: `${excerpt}<p><a href="https://panming-dev.github.io/qimen-mingfa-blog/blog/${slug}/" class="read-more">阅读全文 →</a></p>`,  // 双模：摘要+全文链接
-        // read_more_url 已内嵌到 content，无需独立字段
+        content: body.trim(),
+        source_url: `${SOURCE_URL}/blog/${slug}/`,
         seo_title: data.seo_title || data.title,
         seo_description: data.description || '',
         seo_keywords: Array.isArray(data.keywords) ? data.keywords : (data.keywords ? data.keywords.split(',').map((k) => k.trim()) : []),
-        status: data.status || 'published',
+        status: postStatus,
         // Directus blog_posts 使用 published_at 字段，不使用 date
         published_at: data.date || new Date().toISOString(),
       };
@@ -265,6 +302,7 @@ export async function syncPosts() {
         console.log(`✅ Created: ${slug} (id: ${result.data.id})`);
         created++;
       }
+      syncedSlugs.push(slug);
     } catch (err) {
       console.error(`❌ Failed: ${slug} — ${err.message}`);
       failed++;
@@ -275,6 +313,13 @@ export async function syncPosts() {
   console.log(`   Created: ${created}`);
   console.log(`   Updated: ${updated}`);
   console.log(`   Failed:  ${failed}`);
+
+  if (failed > 0) {
+    throw new Error(`Sync failed for ${failed} post(s); search notifications were not sent`);
+  }
+
+  await notifyPublishedPosts(syncedSlugs);
+  console.log(`   Notified: ${syncedSlugs.length} canonical article URLs`);
 }
 
 syncPosts().catch(err => {

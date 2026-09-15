@@ -7,7 +7,7 @@ author: "磐鸣"
 date: 2024-04-28
 categories: ["奇门遁甲"]
 tags: ["奇门遁甲", "FAQ", "常见问题", "入门教程", "学习指南"]
-draft: false
+draft: true
 ---
 
 ## 一、入门基础（10问）

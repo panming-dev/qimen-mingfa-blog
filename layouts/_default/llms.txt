@@ -1,0 +1,19 @@
+{{- $canonicalBase := strings.TrimSuffix "/" site.Params.canonicalURL -}}
+# 奇门鸣法·磐鸣
+
+> 鸣法与括囊体系的飞盘奇门遁甲知识索引。规范站点：{{ $canonicalBase }}/
+
+## 核心入口
+
+- [奇门全景指南]({{ $canonicalBase }}/qimen/)
+- [命理博客]({{ $canonicalBase }}/blog/)
+- [术语与格局百科]({{ $canonicalBase }}/blog/glossary/)
+- [XML Sitemap]({{ $canonicalBase }}/sitemap.xml)
+
+## 文章
+{{- range where site.RegularPages "Section" "posts" }}
+{{- if and (not .Params.searchHidden) (not .Params.draft) }}
+{{- $canonicalPath := strings.TrimPrefix "/qimen-mingfa-blog" .RelPermalink }}
+- [{{ .Title }}]({{ $canonicalBase }}{{ $canonicalPath }})
+{{- end }}
+{{- end }}

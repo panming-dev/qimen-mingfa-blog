@@ -48,8 +48,8 @@ theme = 'PaperMod'
     weight = 4
 
 [outputs]
-  home = ["HTML"]
-  section = ["HTML"]
+  home = ["HTML", "RSS", "llms"]
+  section = ["HTML", "RSS"]
   taxonomy = ["HTML"]
   term = ["HTML"]
 

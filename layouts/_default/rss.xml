@@ -1,0 +1,25 @@
+{{- $canonicalBase := strings.TrimSuffix "/" site.Params.canonicalURL -}}
+{{- $pages := where site.RegularPages "Params.hiddenInRss" "!=" true -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ site.Title }}</title>
+    <link>{{ $canonicalBase }}/</link>
+    <description>{{ site.Params.description | default site.Title }}</description>
+    <generator>Hugo</generator>
+    <language>{{ site.Language.LanguageCode }}</language>
+    {{- with .OutputFormats.Get "RSS" }}
+    {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
+    {{- end }}
+    {{- range $pages.ByLastmod.Reverse }}
+    {{- $canonicalPath := strings.TrimPrefix "/qimen-mingfa-blog" .RelPermalink }}
+    <item>
+      <title>{{ .Title }}</title>
+      <link>{{ $canonicalBase }}{{ $canonicalPath }}</link>
+      <pubDate>{{ .PublishDate.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
+      <guid>{{ $canonicalBase }}{{ $canonicalPath }}</guid>
+      <description>{{ with .Description | html }}{{ . }}{{ else }}{{ .Summary | html }}{{ end }}</description>
+    </item>
+    {{- end }}
+  </channel>
+</rss>

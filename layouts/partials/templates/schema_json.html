@@ -1,0 +1,46 @@
+{{- $canonicalBase := strings.TrimSuffix "/" site.Params.canonicalURL -}}
+{{- $canonicalPath := strings.TrimPrefix "/qimen-mingfa-blog" .RelPermalink -}}
+{{- $canonicalURL := printf "%s%s" $canonicalBase $canonicalPath -}}
+{{ if .IsHome }}
+<script type="application/ld+json">
+{{ dict "@context" "https://schema.org" "@type" (site.Params.schema.publisherType | default "Organization" | title) "name" site.Title "url" (printf "%s/" $canonicalBase) "description" (site.Params.description | plainify | truncate 180) | jsonify | safeJS }}
+</script>
+{{- else if (or .IsPage .IsSection) }}
+{{- $items := slice -}}
+{{- with .Parent -}}
+  {{- if not .IsHome -}}
+    {{- $parentPath := strings.TrimPrefix "/qimen-mingfa-blog" .RelPermalink -}}
+    {{- $items = $items | append (dict "@type" "ListItem" "position" 1 "name" .Name "item" (printf "%s%s" $canonicalBase $parentPath)) -}}
+  {{- end -}}
+{{- end -}}
+{{- $items = $items | append (dict "@type" "ListItem" "position" (add (len $items) 1) "name" .Name "item" $canonicalURL) -}}
+<script type="application/ld+json">
+{{ dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $items | jsonify | safeJS }}
+</script>
+{{- if .IsPage }}
+{{- $author := .Params.author | default site.Params.author | default "磐鸣" -}}
+{{- $keywords := .Params.keywords | default .Params.tags | default (slice) -}}
+{{- $description := .Description | default (.Summary | plainify) -}}
+{{- $publisher := dict "@type" (site.Params.schema.publisherType | default "Organization" | title) "name" site.Title -}}
+{{- $schema := dict
+  "@context" "https://schema.org"
+  "@type" "BlogPosting"
+  "headline" (.Title | plainify)
+  "name" (.Title | plainify)
+  "description" ($description | plainify)
+  "keywords" $keywords
+  "articleBody" (.Content | htmlUnescape | plainify)
+  "wordCount" .WordCount
+  "inLanguage" (.Language.Lang | default "zh-cn")
+  "datePublished" .PublishDate
+  "dateModified" .Lastmod
+  "author" (dict "@type" "Person" "name" $author)
+  "url" $canonicalURL
+  "mainEntityOfPage" (dict "@type" "WebPage" "@id" $canonicalURL)
+  "publisher" $publisher
+-}}
+<script type="application/ld+json">
+{{ $schema | jsonify | safeJS }}
+</script>
+{{- end }}
+{{- end }}
