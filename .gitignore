@@ -9,3 +9,7 @@
 # Node.js dependencies
 node_modules/
 package-lock.json
+
+# Hugo build output
+.hugo_build.lock
+public/

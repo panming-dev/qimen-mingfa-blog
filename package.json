@@ -5,6 +5,9 @@
   "main": "scripts/sync.js",
   "type": "module",
   "scripts": {
+    "build": "hugo --quiet --minify --ignoreCache --environment production",
+    "check:links": "node scripts/check-generated-links.js",
+    "test": "npm run build && npm run check:links",
     "sync": "node scripts/sync.js"
   },
   "engines": {

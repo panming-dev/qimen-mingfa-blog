@@ -41,9 +41,7 @@ jobs:
         run: rm -rf resources/_gen/ public/
 
       - name: Build site
-        run: |
-          set -x
-          hugo --minify --ignoreCache --logLevel debug --printPathWarnings --environment production
+        run: npm test
 
       - name: Debug generated head
         run: |
