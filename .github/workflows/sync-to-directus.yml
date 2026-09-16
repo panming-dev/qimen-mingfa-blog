@@ -2,7 +2,17 @@ name: Sync to Directus
 on:
   push:
     branches: [master]
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Directus operation to run
+        required: true
+        default: sync
+        type: choice
+        options:
+          - sync
+          - audit
+          - cleanup
 
 jobs:
   sync:
@@ -29,11 +39,18 @@ jobs:
           npm cache clean --force
           npm install --no-audit --no-fund
 
-      - name: Sync Posts to Directus
+      - name: Run Directus operation
         env:
           DIRECTUS_URL: ${{ secrets.DIRECTUS_URL }}
           DIRECTUS_TOKEN: ${{ secrets.DIRECTUS_TOKEN }}
           CANONICAL_URL: ${{ secrets.CANONICAL_URL }}
           REVALIDATION_SECRET: ${{ secrets.REVALIDATION_SECRET }}
           REQUIRE_SEARCH_NOTIFICATIONS: 'true'
-        run: npm run sync
+        run: |
+          operation="${{ github.event.inputs.operation || 'sync' }}"
+          case "$operation" in
+            sync) npm run sync ;;
+            audit) npm run audit:directus ;;
+            cleanup) npm run cleanup:directus ;;
+            *) echo "Unsupported operation: $operation" >&2; exit 1 ;;
+          esac

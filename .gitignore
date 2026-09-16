@@ -13,3 +13,6 @@ package-lock.json
 # Hugo build output
 .hugo_build.lock
 public/
+
+# Local Directus exports
+backups/
