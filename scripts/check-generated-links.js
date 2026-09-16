@@ -20,9 +20,16 @@ if (!fs.existsSync(publicDir)) {
 const failures = [];
 const htmlFiles = findHtmlFiles(publicDir);
 
-for (const requiredFile of ['index.xml', 'llms.txt']) {
+for (const requiredFile of ['index.xml', 'llms.txt', 'robots.txt']) {
   if (!fs.existsSync(path.join(publicDir, requiredFile))) {
     failures.push(`missing discovery file: ${requiredFile}`);
+  }
+}
+
+if (fs.existsSync(path.join(publicDir, 'robots.txt'))) {
+  const robots = fs.readFileSync(path.join(publicDir, 'robots.txt'), 'utf8');
+  if (!robots.includes('User-agent: *') || !robots.includes(`${githubPagesBase}/sitemap.xml`)) {
+    failures.push('robots.txt: crawler or sitemap directive is missing');
   }
 }
 

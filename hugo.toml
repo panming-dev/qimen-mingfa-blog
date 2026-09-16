@@ -2,6 +2,7 @@ baseURL = 'https://panming-dev.github.io/qimen-mingfa-blog/'
 languageCode = 'zh-cn'
 title = '奇门鸣法·磐鸣'
 theme = 'PaperMod'
+enableRobotsTXT = true
 
 # URL 生成策略：文章使用 filename (01-xxx.html) 并强制 .html 后缀
 [permalinks]
