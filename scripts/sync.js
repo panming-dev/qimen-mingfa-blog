@@ -32,7 +32,8 @@ const DIRECTUS_TOKEN = process.env.DIRECTUS_TOKEN;
 const CANONICAL_URL = (process.env.CANONICAL_URL || 'https://panma.site').replace(/\/$/, '');
 const SOURCE_URL = (process.env.SOURCE_URL || 'https://panming-dev.github.io/qimen-mingfa-blog').replace(/\/$/, '');
 const REVALIDATION_SECRET = process.env.REVALIDATION_SECRET;
-const INDEXNOW_WEBHOOK_SECRET = process.env.INDEXNOW_WEBHOOK_SECRET;
+const INDEXNOW_KEY = process.env.INDEXNOW_KEY || '082f2e4ff50ed232be5038cf2d1844fa';
+const REQUIRE_SEARCH_NOTIFICATIONS = process.env.REQUIRE_SEARCH_NOTIFICATIONS === 'true';
 
 if (!DIRECTUS_URL || !DIRECTUS_TOKEN) {
   console.error('❌ Missing DIRECTUS_URL or DIRECTUS_TOKEN environment variables');
@@ -121,21 +122,45 @@ async function postWebhook(path, secretHeader, secret, body) {
   }
 }
 
+async function submitIndexNow(urls) {
+  const response = await fetch('https://www.bing.com/indexnow', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      host: new URL(CANONICAL_URL).host,
+      key: INDEXNOW_KEY,
+      keyLocation: `${CANONICAL_URL}/indexnow-key/`,
+      urlList: urls,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`IndexNow returned HTTP ${response.status}: ${await response.text()}`);
+  }
+}
+
 async function notifyPublishedPosts(slugs) {
   const paths = ['/blog/', '/sitemap.xml', ...slugs.map((slug) => `/blog/${slug}/`)];
   for (const path of paths) {
     await postWebhook('/api/revalidate', 'x-revalidate-secret', REVALIDATION_SECRET, { path });
   }
 
-  await postWebhook('/api/indexnow', 'x-indexnow-secret', INDEXNOW_WEBHOOK_SECRET, {
-    urls: paths.map((path) => new URL(path, `${CANONICAL_URL}/`).toString()),
-  });
+  await submitIndexNow(paths.map((path) => new URL(path, `${CANONICAL_URL}/`).toString()));
 }
 
 /**
  * Main sync function
  */
 export async function syncPosts() {
+  if (REQUIRE_SEARCH_NOTIFICATIONS) {
+    const missingSecrets = [
+      !REVALIDATION_SECRET && 'REVALIDATION_SECRET',
+    ].filter(Boolean);
+    if (missingSecrets.length > 0) {
+      throw new Error(`Missing required search notification secrets: ${missingSecrets.join(', ')}`);
+    }
+  }
+
   // 确保 "奇门" 分类存在，获取其 UUID
   let defaultCategoryId = process.env.DEFAULT_CATEGORY_ID;
   console.log('[DEBUG] DEFAULT_CATEGORY_ID env:', process.env.DEFAULT_CATEGORY_ID);

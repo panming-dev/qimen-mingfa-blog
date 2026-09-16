@@ -35,5 +35,5 @@ jobs:
           DIRECTUS_TOKEN: ${{ secrets.DIRECTUS_TOKEN }}
           CANONICAL_URL: ${{ secrets.CANONICAL_URL }}
           REVALIDATION_SECRET: ${{ secrets.REVALIDATION_SECRET }}
-          INDEXNOW_WEBHOOK_SECRET: ${{ secrets.INDEXNOW_WEBHOOK_SECRET }}
+          REQUIRE_SEARCH_NOTIFICATIONS: 'true'
         run: npm run sync

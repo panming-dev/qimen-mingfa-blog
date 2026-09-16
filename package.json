@@ -8,7 +8,9 @@
     "build": "hugo --quiet --minify --ignoreCache --cleanDestinationDir --environment production",
     "check:links": "node scripts/check-generated-links.js",
     "test": "npm run build && npm run check:links",
-    "sync": "node scripts/sync.js"
+    "sync": "node scripts/sync.js",
+    "audit:directus": "node scripts/audit-directus-posts.js",
+    "cleanup:directus": "node scripts/audit-directus-posts.js --apply"
   },
   "engines": {
     "node": ">=18"
